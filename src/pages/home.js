@@ -462,9 +462,8 @@ export function renderHome(container, navigate) {
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="footer__logo" style="display:flex; align-items:center; justify-content:center; gap:10px;">
-      <img src="/Scribbleee.png" alt="Scribbleee App Logo" style="height:40px; width:auto; border-radius:8px; border:2px solid #000; box-shadow:2px 2px 0 #000;" />
-      <span>Scribbleee</span>
+    <div class="footer__logo" style="display:flex; align-items:center; justify-content:center;">
+      <img src="/Scribbleee.png" alt="Scribbleee App Logo" style="height:48px; width:auto; object-fit:contain;" />
     </div>
     <p class="footer__sub">Made with love for creative people everywhere. Draw something wonderful today.</p>
   </footer>
