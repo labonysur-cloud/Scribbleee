@@ -189,10 +189,26 @@ export function renderStudio(container, navigate) {
     padding: var(--space-3) var(--space-4);
     display: flex; flex-direction: column; gap: var(--space-3);
   `;
+  const getShapeSVG = (type) => {
+    const svgs = {
+      heart: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+      star: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+      sparkle: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5Z"/></svg>',
+      circle: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="8"/></svg>',
+      flower: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12 2C10.5 2 9.2 3.1 9 4.6C7.6 4.3 6.1 4.8 5.3 6C4.4 7.3 4.6 8.8 5.5 10C4.3 10.8 3.8 12.3 4.1 13.7C4.4 15.2 5.5 16.3 7 16.5C7.2 18 8.4 19.2 9.9 19.5C11.3 19.8 12.8 19.3 13.8 18.2C14.8 19.2 16.3 19.6 17.7 19.2C19.2 18.8 20.2 17.6 20.4 16.1C21.7 15.2 22.2 13.6 21.8 12.1C21.4 10.6 20.2 9.5 18.7 9.3C18.5 7.8 17.3 6.6 15.8 6.3C14.4 6 12.9 6.5 11.9 7.6C12.1 6.1 11.4 4.7 10.2 3.9C10.7 2.8 11.3 2 12 2Z"/></svg>',
+      cloud: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>',
+      crown: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>',
+      bow: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12 10.5C10 7.5 5 6 3 9c-2 3 1.5 7.5 4.5 5.5L12 12l4.5 2.5C19.5 16.5 23 12 21 9c-2-3-7-1.5-9 1.5z"/></svg>',
+      moon: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M12.3 2c-.4 0-.7.3-.8.7-.3 1.5-.2 3 .4 4.5.8 1.9 2.4 3.5 4.3 4.3 1.5.6 3 .7 4.5.4.4-.1.7.2.7.6-.4 4.9-4.5 8.8-9.5 8.8-5.3 0-9.6-4.3-9.6-9.6 0-5 3.9-9.1 8.8-9.5z"/></svg>',
+      bolt: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px;margin-right:4px;"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg>'
+    };
+    return svgs[type] || '';
+  };
+
   symbolsBar.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
       <span style="font-family:var(--font-doodle); font-weight:800; font-size:1.05rem; color:#ff1493; display:flex; align-items:center; gap:6px;">
-        ✨ Ready-Made Symbols & Shapes
+        Ready-Made Symbols & Shapes
       </span>
       <div style="display:flex; gap:12px; font-family:var(--font-doodle); font-size:0.88rem;">
         <label style="cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:700;">
@@ -205,16 +221,16 @@ export function renderStudio(container, navigate) {
     </div>
 
     <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;" id="symbol-buttons-grid">
-      <button class="btn btn--sm sym-btn btn--primary" data-sym="heart" style="font-family:var(--font-doodle);">❤️ Heart</button>
-      <button class="btn btn--sm sym-btn" data-sym="star" style="font-family:var(--font-doodle);">⭐ Star</button>
-      <button class="btn btn--sm sym-btn" data-sym="sparkle" style="font-family:var(--font-doodle);">✨ Sparkle</button>
-      <button class="btn btn--sm sym-btn" data-sym="circle" style="font-family:var(--font-doodle);">⭕ Circle</button>
-      <button class="btn btn--sm sym-btn" data-sym="flower" style="font-family:var(--font-doodle);">🌸 Flower</button>
-      <button class="btn btn--sm sym-btn" data-sym="cloud" style="font-family:var(--font-doodle);">☁️ Cloud</button>
-      <button class="btn btn--sm sym-btn" data-sym="crown" style="font-family:var(--font-doodle);">👑 Crown</button>
-      <button class="btn btn--sm sym-btn" data-sym="bow" style="font-family:var(--font-doodle);">🎀 Bow</button>
-      <button class="btn btn--sm sym-btn" data-sym="moon" style="font-family:var(--font-doodle);">🌙 Moon</button>
-      <button class="btn btn--sm sym-btn" data-sym="bolt" style="font-family:var(--font-doodle);">⚡ Bolt</button>
+      <button class="btn btn--sm sym-btn btn--primary" data-sym="heart" style="font-family:var(--font-doodle);">${getShapeSVG('heart')} Heart</button>
+      <button class="btn btn--sm sym-btn" data-sym="star" style="font-family:var(--font-doodle);">${getShapeSVG('star')} Star</button>
+      <button class="btn btn--sm sym-btn" data-sym="sparkle" style="font-family:var(--font-doodle);">${getShapeSVG('sparkle')} Sparkle</button>
+      <button class="btn btn--sm sym-btn" data-sym="circle" style="font-family:var(--font-doodle);">${getShapeSVG('circle')} Circle</button>
+      <button class="btn btn--sm sym-btn" data-sym="flower" style="font-family:var(--font-doodle);">${getShapeSVG('flower')} Flower</button>
+      <button class="btn btn--sm sym-btn" data-sym="cloud" style="font-family:var(--font-doodle);">${getShapeSVG('cloud')} Cloud</button>
+      <button class="btn btn--sm sym-btn" data-sym="crown" style="font-family:var(--font-doodle);">${getShapeSVG('crown')} Crown</button>
+      <button class="btn btn--sm sym-btn" data-sym="bow" style="font-family:var(--font-doodle);">${getShapeSVG('bow')} Bow</button>
+      <button class="btn btn--sm sym-btn" data-sym="moon" style="font-family:var(--font-doodle);">${getShapeSVG('moon')} Moon</button>
+      <button class="btn btn--sm sym-btn" data-sym="bolt" style="font-family:var(--font-doodle);">${getShapeSVG('bolt')} Bolt</button>
     </div>
 
     <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; border-top:2px dashed var(--gray-200); padding-top:10px;">
@@ -229,13 +245,13 @@ export function renderStudio(container, navigate) {
           + Drop to Center
         </button>
         <button class="btn btn--sm" id="btn-toggle-stamp" style="font-family:var(--font-doodle); font-weight:800; background:#e0ffff; border-color:#00ced1;">
-          👆 Tap Canvas to Stamp
+          Tap Canvas to Stamp
         </button>
       </div>
     </div>
 
     <div style="font-family:var(--font-doodle); font-size:0.82rem; color:#444; text-align:center; background:#fff0f5; padding:6px 10px; border-radius:10px; border:1px solid #ffb6c1;">
-      💡 <b>Personalize & Cut-Out:</b> Stamp any shape onto your letter, then pick the <b>Eraser</b> tool on the left to erase sections or draw cute cut-out faces & decorations!
+      Note: <b>Personalize & Cut-Out:</b> Stamp any shape onto your letter, then pick the <b>Eraser</b> tool on the left to erase sections or draw cute cut-out faces & decorations!
     </div>
   `;
   centerCol.appendChild(symbolsBar);
@@ -253,7 +269,7 @@ export function renderStudio(container, navigate) {
       if (stampBtn) {
         stampBtn.style.background = '#e0ffff';
         stampBtn.style.color = 'var(--black)';
-        stampBtn.textContent = '👆 Tap Canvas to Stamp';
+        stampBtn.textContent = 'Tap Canvas to Stamp';
       }
     }
   };
@@ -303,12 +319,12 @@ export function renderStudio(container, navigate) {
     if (stampModeActive) {
       stampBtn.style.background = '#ff69b4';
       stampBtn.style.color = '#fff';
-      stampBtn.textContent = '🔴 Exit Stamp Mode';
+      stampBtn.textContent = '[X] Exit Stamp Mode';
       canvasApi.setStampMode(true, selectedSymType, { radius: size, fillMode, thickness: 8 });
     } else {
       stampBtn.style.background = '#e0ffff';
       stampBtn.style.color = 'var(--black)';
-      stampBtn.textContent = '👆 Tap Canvas to Stamp';
+      stampBtn.textContent = 'Tap Canvas to Stamp';
       canvasApi.setStampMode(false);
     }
   });
@@ -361,7 +377,7 @@ export function renderStudio(container, navigate) {
     <button class="tab-btn" data-tab="symbols"
       style="flex:1;padding:var(--space-3);font-family:var(--font-doodle);font-size:0.82rem;
              border:none;cursor:pointer;background:var(--cream);transition:background 0.1s;">
-      ✨ Symbols
+      Symbols
     </button>
   `;
 
@@ -479,20 +495,20 @@ export function renderStudio(container, navigate) {
     </p>
     <div style="display:flex;flex-direction:column;gap:8px;">
       ${[
-        { id: 'heart', name: '❤️ Heart Shape', desc: 'Classic cute romantic symbol' },
-        { id: 'star', name: '⭐ Star Shape', desc: 'A aesthetic 5-pointed star' },
-        { id: 'sparkle', name: '✨ Sparkle', desc: 'Twinkling 4-point sparkle' },
-        { id: 'circle', name: '⭕ Round Shape', desc: 'Perfect circular ring frame' },
-        { id: 'flower', name: '🌸 Flower', desc: 'Whimsical 5-petal blossom' },
-        { id: 'cloud', name: '☁️ Cloud', desc: 'Fluffy dream cloud shape' },
-        { id: 'crown', name: '👑 Princess Crown', desc: 'Royal tiara crest' },
-        { id: 'bow', name: '🎀 Cute Bow', desc: 'Sweet decorative ribbon' },
-        { id: 'moon', name: '🌙 Crescent Moon', desc: 'Dreamy nighttime crescent' },
-        { id: 'bolt', name: '⚡ Lightning Bolt', desc: 'Energetic zap bolt' },
+        { id: 'heart', name: 'Heart Shape', desc: 'Classic cute romantic symbol' },
+        { id: 'star', name: 'Star Shape', desc: 'An aesthetic 5-pointed star' },
+        { id: 'sparkle', name: 'Sparkle Shape', desc: 'Twinkling 4-point sparkle' },
+        { id: 'circle', name: 'Round Shape', desc: 'Perfect circular ring frame' },
+        { id: 'flower', name: 'Flower Blossom', desc: 'Whimsical 5-petal blossom' },
+        { id: 'cloud', name: 'Cloud Shape', desc: 'Fluffy dream cloud shape' },
+        { id: 'crown', name: 'Princess Crown', desc: 'Royal tiara crest' },
+        { id: 'bow', name: 'Cute Bow', desc: 'Sweet decorative ribbon' },
+        { id: 'moon', name: 'Crescent Moon', desc: 'Dreamy nighttime crescent' },
+        { id: 'bolt', name: 'Lightning Bolt', desc: 'Energetic zap bolt' },
       ].map(sym => `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:2px solid var(--black);background:var(--cream);border-radius:10px;">
           <div>
-            <strong style="font-family:var(--font-doodle);font-size:0.9rem;display:block;">${sym.name}</strong>
+            <strong style="font-family:var(--font-doodle);font-size:0.9rem;display:flex;align-items:center;">${getShapeSVG(sym.id)} ${sym.name}</strong>
             <span style="font-family:var(--font-doodle);font-size:0.75rem;color:var(--gray-500);">${sym.desc}</span>
           </div>
           <button class="btn btn--sm btn--primary right-sym-add" data-sym="${sym.id}" style="font-family:var(--font-doodle);font-weight:700;">
