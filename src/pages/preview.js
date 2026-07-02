@@ -210,7 +210,7 @@ export function renderPreview(container, navigate) {
         Export Specimen PNG
       </button>
       <button class="btn" id="sidebar-edit-btn" style="font-family:var(--font-doodle);width:100%;">
-        ✏️ Edit in Studio
+        Edit in Studio
       </button>
     </div>
   `;

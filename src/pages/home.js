@@ -339,7 +339,7 @@ export function renderHome(container, navigate) {
 
       <!-- Labony Sur Creator Badge -->
       <div style="display:inline-block; background:#fff; border:3px solid #000; box-shadow:4px 4px 0px #000; border-radius:30px; padding:8px 22px; margin-bottom:20px; font-family:var(--font-doodle); font-size:1.2rem; font-weight:700; color:#000; position:relative; z-index:2;">
-        ✨ A Creative Solo Project Made with Love by <span style="color:#ff1493; text-decoration:underline;">Labony Sur</span> ✨
+        * A Creative Solo Project Made with Love by <span style="color:#ff1493; text-decoration:underline;">Labony Sur</span> *
       </div>
 
       <!-- Stop-Motion Flipbook Logo Text on ONE single line with NO white background -->

@@ -67,8 +67,8 @@ export function renderStudio(container, navigate) {
       </button>
       <button class="btn btn--sm" id="btn-preview"  style="font-family:var(--font-doodle);">Preview Text</button>
       <button class="btn btn--sm" id="btn-animate"  style="font-family:var(--font-doodle);">Animate</button>
-      <button class="btn btn--sm" id="btn-download-font" style="font-family:var(--font-doodle);">Download Font ▾</button>
-      <button class="btn btn--sm btn--cute-pink" id="btn-publish" style="font-family:var(--font-doodle);font-weight:800;">🚀 Publish</button>
+      <button class="btn btn--sm" id="btn-download-font" style="font-family:var(--font-doodle);">Download Font</button>
+      <button class="btn btn--sm btn--cute-pink" id="btn-publish" style="font-family:var(--font-doodle);font-weight:800;">Publish</button>
       <button class="btn btn--sm btn--primary" id="btn-save" style="font-family:var(--font-doodle);">Save</button>
     </div>
   `;
@@ -177,7 +177,7 @@ export function renderStudio(container, navigate) {
   canvasControls.innerHTML = `
     <button class="btn btn--sm" id="btn-undo"  title="Undo (Ctrl+Z)" style="font-family:var(--font-doodle);">↩ Undo</button>
     <button class="btn btn--sm" id="btn-redo"  title="Redo (Ctrl+Y)" style="font-family:var(--font-doodle);">↪ Redo</button>
-    <button class="btn btn--sm" id="btn-clear" style="font-family:var(--font-doodle);border-style:dashed;">✕ Clear</button>
+    <button class="btn btn--sm" id="btn-clear" style="font-family:var(--font-doodle);border-style:dashed;">Clear</button>
     <span style="color:var(--gray-300);font-size:1.2rem;">|</span>
     <button class="btn btn--sm" id="btn-prev-char" style="font-family:var(--font-doodle);">← Prev</button>
     <button class="btn btn--sm" id="btn-next-char" style="font-family:var(--font-doodle);">Next →</button>
@@ -885,7 +885,7 @@ function showPreviewModal(project, container) {
     <div class="modal" style="max-width:620px;width:95%;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
         <h2 style="font-family:var(--font-display);font-size:1.8rem;">Font Preview</h2>
-        <button class="btn btn--sm btn--icon" id="modal-close">✕</button>
+        <button class="btn btn--sm btn--icon" id="modal-close">X</button>
       </div>
       <div style="margin-bottom:var(--space-4);">
         <label class="label">Type some text</label>
@@ -1005,7 +1005,7 @@ function showDownloadModal(project, container) {
     <div class="modal">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
         <h2 style="font-family:var(--font-display);font-size:1.8rem;">Download Font</h2>
-        <button class="btn btn--sm btn--icon" id="dl-close">✕</button>
+        <button class="btn btn--sm btn--icon" id="dl-close">X</button>
       </div>
       <p style="font-family:var(--font-doodle);font-size:1.1rem;margin-bottom:var(--space-5);">
         Your font <strong>"${project.name}"</strong> has <strong>${glyphCount}</strong> glyph${glyphCount !== 1 ? 's' : ''} drawn.
@@ -1034,21 +1034,6 @@ function showDownloadModal(project, container) {
           <span style="font-size:0.8rem;color:var(--gray-400);">Smaller filesize · modern browsers</span>
         </button>
       </div>
-
-      <div style="border-top:var(--border-sm);border-style:dashed;padding-top:var(--space-4);">
-        <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:var(--space-2);">Share to Community (Zero Database)</h3>
-        <p style="font-family:var(--font-doodle);color:var(--gray-500);font-size:0.9rem;margin-bottom:var(--space-3);">
-          Publish without login or backend servers via GitHub CDN or IPFS network!
-        </p>
-        <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3);">
-          <input class="input" id="share-author" placeholder="Your Artist Name (e.g. Labony Sur)" style="font-family:var(--font-doodle);font-size:0.9rem;" />
-          <select class="input" id="share-method" style="font-family:var(--font-doodle);font-size:0.9rem;">
-            <option value="github">Method 1: GitHub Archive (CDN & PR Auto-Merge)</option>
-            <option value="ipfs">Method 2: IPFS P2P Network (Immutable CID)</option>
-          </select>
-        </div>
-        <button class="btn btn--cute-pink" id="dl-share" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.05rem;">Publish to Community</button>
-      </div>
     </div>
   `;
 
@@ -1074,24 +1059,7 @@ function showDownloadModal(project, container) {
   overlay.querySelector('#dl-woff').addEventListener('click', guardedDownload(downloadAsWOFF, 'WOFF font'));
   overlay.querySelector('#dl-woff2').addEventListener('click', guardedDownload(downloadAsWOFF2, 'WOFF2 font'));
 
-  overlay.querySelector('#dl-share').addEventListener('click', async () => {
-    try {
-      const author = overlay.querySelector('#share-author').value.trim() || 'Anonymous Artist';
-      const storageMethod = overlay.querySelector('#share-method').value;
 
-      let fontData = '';
-      try { fontData = getFontDataURL(project); } catch (_) {}
-      const res = await publishFont(project, fontData, { storageMethod, author });
-      if (storageMethod === 'ipfs') {
-        showToast(`Published to IPFS network! CID: ${res.cid.slice(0, 12)}...`);
-      } else {
-        showToast('Published via GitHub Archive! Available on global CDN.');
-      }
-      close();
-    } catch (e) {
-      showToast('Could not publish font.');
-    }
-  });
 
   container.appendChild(overlay);
 }
@@ -1106,7 +1074,7 @@ function showAnimateModal(project, container) {
     <div class="modal" style="max-width:560px;width:95%;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
         <h2 style="font-family:var(--font-display);font-size:1.8rem;">Instagram Animation</h2>
-        <button class="btn btn--sm btn--icon" id="anim-close">✕</button>
+        <button class="btn btn--sm btn--icon" id="anim-close">X</button>
       </div>
 
       <div style="margin-bottom:var(--space-4);">
@@ -1215,11 +1183,11 @@ function showDirectPublishModal(project, container, navigate) {
   overlay.innerHTML = `
     <div class="modal" style="max-width:500px;width:95%;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
-        <h2 style="font-family:var(--font-display);font-size:1.8rem;color:#ff1493;">🚀 Direct One-Click Publish</h2>
-        <button class="btn btn--sm" id="pub-close">✕</button>
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;color:#ff1493;">Publish to Community</h2>
+        <button class="btn btn--sm" id="pub-close">X</button>
       </div>
       <p style="font-family:var(--font-doodle);font-size:0.95rem;color:var(--gray-500);margin-bottom:var(--space-4);line-height:1.5;">
-        Publish <strong>"${project.name}"</strong> directly to the public Scribbleee Community Library so anyone can discover, download, and create with your font!
+        Publish <strong>"${project.name}"</strong> to the public Scribbleee Community Library so anyone can discover, download, and create with your font!
       </p>
       <div style="background:var(--cream);padding:var(--space-3);border:var(--border-sm);border-radius:4px;margin-bottom:var(--space-4);">
         <div style="font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-400);margin-bottom:var(--space-1);">Glyphs ready:</div>
@@ -1229,15 +1197,8 @@ function showDirectPublishModal(project, container, navigate) {
         <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;margin-bottom:4px;">Artist / Creator Name:</label>
         <input class="input" id="pub-author" placeholder="Labony Sur" value="Labony Sur" style="width:100%;font-family:var(--font-doodle);" />
       </div>
-      <div style="margin-bottom:var(--space-5);">
-        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;margin-bottom:4px;">Decentralized Network:</label>
-        <select class="input" id="pub-method" style="width:100%;font-family:var(--font-doodle);">
-          <option value="github">Global Community Library (Instant Free CDN)</option>
-          <option value="ipfs">IPFS InterPlanetary File System (P2P Network)</option>
-        </select>
-      </div>
       <button class="btn btn--cute-pink" id="pub-confirm" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.15rem;padding:12px;">
-        ✨ Publish Directly to Library
+        Publish to Library
       </button>
     </div>
   `;
@@ -1253,17 +1214,17 @@ function showDirectPublishModal(project, container, navigate) {
         return;
       }
       const author = overlay.querySelector('#pub-author').value.trim() || 'Labony Sur';
-      const storageMethod = overlay.querySelector('#pub-method').value;
+      const storageMethod = 'github';
 
       const confirmBtn = overlay.querySelector('#pub-confirm');
-      confirmBtn.textContent = '⏳ Publishing font to network...';
+      confirmBtn.textContent = 'Publishing font...';
       confirmBtn.disabled = true;
 
       let fontData = '';
       try { fontData = getFontDataURL(project); } catch (_) {}
       await publishFont(project, fontData, { storageMethod, author });
       
-      showToast('🎉 Successfully Published to Community Library!');
+      showToast('Successfully Published to Community Library!');
       close();
       if (navigate) navigate('library');
     } catch (e) {
