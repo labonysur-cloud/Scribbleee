@@ -337,6 +337,11 @@ export function renderHome(container, navigate) {
         <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:#000;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       </div>
 
+      <!-- Labony Sur Creator Badge -->
+      <div style="display:inline-block; background:#fff; border:3px solid #000; box-shadow:4px 4px 0px #000; border-radius:30px; padding:8px 22px; margin-bottom:20px; font-family:var(--font-doodle); font-size:1.2rem; font-weight:700; color:#000; position:relative; z-index:2;">
+        ✨ A Creative Solo Project Made with Love by <span style="color:#ff1493; text-decoration:underline;">Labony Sur</span> ✨
+      </div>
+
       <!-- Prominent centered Neo-Brutalist White Box with ONLY the animation inside -->
       <div style="background: #ffffff; border: 4px solid #000; box-shadow: 8px 8px 0px #000; border-radius: 28px; padding: var(--space-12) var(--space-6); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
         <!-- Slowed-down Stop-Motion Flipbook Logo Text ONLY -->
@@ -347,10 +352,8 @@ export function renderHome(container, navigate) {
 
       <!-- Subtitle and CTAs placed below the white box on the beautiful pink page -->
       <div style="margin-top: var(--space-8); position: relative; z-index: 2;">
-        <p class="hero__sub" style="margin-bottom:var(--space-6); max-width:620px; font-family:var(--font-doodle); font-size:1.4rem; color:#222;">
-          The most adorable font creation studio on the planet.
-          Draw custom English and Bangla fonts, generate real font files,
-          and export Instagram-ready animations. No login ever.
+        <p class="hero__sub" style="margin-bottom:var(--space-6); max-width:640px; font-family:var(--font-doodle); font-size:1.35rem; color:#222; line-height:1.5;">
+          An independent creative typography studio built by <strong>Labony Sur</strong>. Draw custom English and Bangla handwriting fonts directly in your browser, decorate with adorable vector stamps, and download real TTF & OTF font files for free!
         </p>
 
         <div class="hero__ctas" style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
