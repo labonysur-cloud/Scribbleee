@@ -1,8 +1,23 @@
+<div align="center">
+
+<img src="./Scribbleee.png" alt="Scribbleee App Logo" width="150" />
+
 # Scribbleee
+
+<img src="https://readme-typing-svg.demolab.com?font=Space+Grotesk&weight=700&size=24&duration=3000&pause=1000&color=FF1493&center=true&vCenter=true&width=650&lines=Draw+Your+Own+Custom+Handwriting+Fonts;Generate+Real+TTF+and+OTF+Font+Files;Decorate+With+Cute+Vector+Stamps;Bilingual+English+and+Bangla+Studio" alt="Typing Banner" />
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Aesthetic-Neo--Brutalist-ffb6c1?style=for-the-badge&labelColor=000000" alt="Theme" />
+  <img src="https://img.shields.io/badge/Architecture-Zero--Database-ff1493?style=for-the-badge&labelColor=000000" alt="Architecture" />
+  <img src="https://img.shields.io/badge/Export-TTF%20%7C%20OTF%20%7C%20WOFF-ff69b4?style=for-the-badge&labelColor=000000" alt="Formats" />
+  <img src="https://img.shields.io/badge/License-MIT-000000?style=for-the-badge&labelColor=ffdfea" alt="License" />
+</p>
 
 ### The Whimsical Neo-Brutalist Font Studio & Decentralized Type Foundry
 
 Where Sharp Monochrome Neo-Brutalism Meets Princess-Cute Aesthetic! Draw, animate, and publish bilingual English & Bangla fonts directly in your browser without ever logging in or touching a server database.
+
+</div>
 
 ## Welcome to Scribbleee
 
