@@ -68,6 +68,7 @@ export function renderStudio(container, navigate) {
       <button class="btn btn--sm" id="btn-preview"  style="font-family:var(--font-doodle);">Preview Text</button>
       <button class="btn btn--sm" id="btn-animate"  style="font-family:var(--font-doodle);">Animate</button>
       <button class="btn btn--sm" id="btn-download-font" style="font-family:var(--font-doodle);">Download Font ▾</button>
+      <button class="btn btn--sm btn--cute-pink" id="btn-publish" style="font-family:var(--font-doodle);font-weight:800;">🚀 Publish</button>
       <button class="btn btn--sm btn--primary" id="btn-save" style="font-family:var(--font-doodle);">Save</button>
     </div>
   `;
@@ -798,6 +799,12 @@ export function renderStudio(container, navigate) {
     showAnimateModal(project, modalArea);
   });
 
+  // ── Direct Publish modal ───────────────────
+  page.querySelector('#btn-publish').addEventListener('click', () => {
+    saveCurrentGlyphToProject();
+    showDirectPublishModal(project, modalArea, navigate);
+  });
+
   // ── Keyboard shortcuts ─────────────────────
   document.addEventListener('keydown', handleKeyboard);
   page._cleanup = () => document.removeEventListener('keydown', handleKeyboard);
@@ -1195,5 +1202,74 @@ function showAnimateModal(project, container) {
       barEl.style.width = '0%';
     }
   });
+  container.appendChild(overlay);
+}
+
+// ── Direct Publish modal ──────────────────────────────────────
+function showDirectPublishModal(project, container, navigate) {
+  const glyphCount = Object.keys(project.glyphs || {}).filter(k => project.glyphs[k]?.strokes?.length > 0).length;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:500px;width:95%;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+        <h2 style="font-family:var(--font-display);font-size:1.8rem;color:#ff1493;">🚀 Direct One-Click Publish</h2>
+        <button class="btn btn--sm" id="pub-close">✕</button>
+      </div>
+      <p style="font-family:var(--font-doodle);font-size:0.95rem;color:var(--gray-500);margin-bottom:var(--space-4);line-height:1.5;">
+        Publish <strong>"${project.name}"</strong> directly to the public Scribbleee Community Library so anyone can discover, download, and create with your font!
+      </p>
+      <div style="background:var(--cream);padding:var(--space-3);border:var(--border-sm);border-radius:4px;margin-bottom:var(--space-4);">
+        <div style="font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-400);margin-bottom:var(--space-1);">Glyphs ready:</div>
+        <div style="font-family:var(--font-display);font-size:1.3rem;">${glyphCount} Character${glyphCount !== 1 ? 's' : ''} Drawn</div>
+      </div>
+      <div style="margin-bottom:var(--space-4);">
+        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;margin-bottom:4px;">Artist / Creator Name:</label>
+        <input class="input" id="pub-author" placeholder="Labony Sur" value="Labony Sur" style="width:100%;font-family:var(--font-doodle);" />
+      </div>
+      <div style="margin-bottom:var(--space-5);">
+        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;margin-bottom:4px;">Decentralized Network:</label>
+        <select class="input" id="pub-method" style="width:100%;font-family:var(--font-doodle);">
+          <option value="github">Global Community Library (Instant Free CDN)</option>
+          <option value="ipfs">IPFS InterPlanetary File System (P2P Network)</option>
+        </select>
+      </div>
+      <button class="btn btn--cute-pink" id="pub-confirm" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.15rem;padding:12px;">
+        ✨ Publish Directly to Library
+      </button>
+    </div>
+  `;
+
+  const close = () => overlay.remove();
+  overlay.querySelector('#pub-close').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+  overlay.querySelector('#pub-confirm').addEventListener('click', async () => {
+    try {
+      if (glyphCount === 0) {
+        showToast('Draw at least 1 character before publishing!');
+        return;
+      }
+      const author = overlay.querySelector('#pub-author').value.trim() || 'Labony Sur';
+      const storageMethod = overlay.querySelector('#pub-method').value;
+
+      const confirmBtn = overlay.querySelector('#pub-confirm');
+      confirmBtn.textContent = '⏳ Publishing font to network...';
+      confirmBtn.disabled = true;
+
+      let fontData = '';
+      try { fontData = getFontDataURL(project); } catch (_) {}
+      await publishFont(project, fontData, { storageMethod, author });
+      
+      showToast('🎉 Successfully Published to Community Library!');
+      close();
+      if (navigate) navigate('library');
+    } catch (e) {
+      showToast('Could not publish font. Try drawing more characters.');
+      console.error(e);
+    }
+  });
+
   container.appendChild(overlay);
 }

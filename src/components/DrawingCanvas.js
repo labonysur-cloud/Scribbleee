@@ -156,8 +156,9 @@ export function createDrawingCanvas(options = {}) {
   wrapper.className = 'canvas-wrapper';
   wrapper.style.cssText = `
     position: relative;
-    width: ${CANVAS_W}px;
-    height: ${CANVAS_H}px;
+    width: 100%;
+    max-width: ${CANVAS_W}px;
+    aspect-ratio: 5 / 6;
     border: var(--border-lg);
     background: #ffffff;
     box-shadow: var(--shadow-lg);
@@ -169,13 +170,13 @@ export function createDrawingCanvas(options = {}) {
   const guideCanvas = document.createElement('canvas');
   guideCanvas.width = CANVAS_W;
   guideCanvas.height = CANVAS_H;
-  guideCanvas.style.cssText = `position:absolute;top:0;left:0;pointer-events:none;`;
+  guideCanvas.style.cssText = `position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;`;
 
   // Drawing canvas
   const drawCanvas = document.createElement('canvas');
   drawCanvas.width = CANVAS_W;
   drawCanvas.height = CANVAS_H;
-  drawCanvas.style.cssText = `position:absolute;top:0;left:0;touch-action:none;cursor:crosshair;`;
+  drawCanvas.style.cssText = `position:absolute;top:0;left:0;width:100%;height:100%;touch-action:none;cursor:crosshair;`;
   drawCanvas.id = 'draw-canvas';
 
   wrapper.appendChild(guideCanvas);

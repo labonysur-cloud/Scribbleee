@@ -458,6 +458,11 @@ body {
 
 /* ── MOBILE RESPONSIVENESS (PHONES & TABLETS) ── */
 @media (max-width: 900px) {
+  .page {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+  }
   .studio-top-bar {
     padding: 8px 10px !important;
     gap: 8px !important;
@@ -476,14 +481,35 @@ body {
   .studio-editor {
     display: flex !important;
     flex-direction: column !important;
-    overflow-y: auto !important;
+    height: auto !important;
+    overflow: visible !important;
   }
   .studio-center-col {
     order: 1 !important;
     width: 100% !important;
     border-right: none !important;
     border-bottom: var(--border) !important;
-    padding: var(--space-3) !important;
+    padding: var(--space-4) var(--space-2) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 480px !important;
+    overflow: visible !important;
+  }
+  .canvas-wrapper {
+    width: 100% !important;
+    max-width: 380px !important;
+    aspect-ratio: 5 / 6 !important;
+    height: auto !important;
+    min-height: 360px !important;
+    margin: 0 auto !important;
+    display: block !important;
+    position: relative !important;
+  }
+  .canvas-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
   }
   .tool-panel {
     order: 2 !important;
