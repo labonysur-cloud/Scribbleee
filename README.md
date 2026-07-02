@@ -1,4 +1,5 @@
-# 👑🎀 Scribbleee — The Whimsical Neo-Brutalist Font Studio 🖤✨
+# 👑🎀 Scribbleee 🎀👑
+### The Whimsical Neo-Brutalist Font Studio & Decentralized Type Foundry 🖤✨
 
 <div align="center">
 
@@ -10,151 +11,148 @@
  |____/|_|  |_|  |_|_|                            
 ```
 
-**Where Sharp Neo-Brutalism Meets Princess-Cute Aesthetic! 👑✨**  
-*Create, animate, and download custom English & Bangla fonts right in your browser — zero login, zero database, 100% pure client-side magic.*
-
----
+**Where Sharp Monochrome Neo-Brutalism Meets Princess-Cute Aesthetic! 👑🌸**  
+*Draw, animate, and publish bilingual English & Bangla fonts directly in your browser without ever logging in or touching a server database.*
 
 </div>
 
-## 🌟 What is Scribbleee?
+🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀
 
-**Scribbleee** is a next-generation, zero-backend, browser-based custom typography studio and font foundry. Designed with a striking **Neo-Brutalist** monochrome foundation paired with playful **Princess-Cute** pastel accents, Scribbleee empowers designers, creators, and aesthetic enthusiasts to draw, refine, and export real installable fonts in seconds.
+## 🌟 Welcome to Scribbleee
 
-Whether you want to build custom whimsical headers for your website, create animated 12 FPS stop-motion typography for **Instagram Stories**, or publish bilingual **Bangla & English** handwriting fonts to an open community library, Scribbleee handles everything directly inside your browser memory!
+Scribbleee is a revolutionary web-based typography studio that puts full creative font-making power directly into everyone's hands. No signup required. No login barriers. Just pure, unadulterated creative expression!
 
----
+Designed with a bold **black-and-white Neo-Brutalist** structural foundation highlighted by **cute pastel princess accents** (pink, rose, lavender, and butter yellow), Scribbleee feels like a magical digital sketchbook where your handwriting comes alive as real, installable font software.
 
-## ✨ Features That Make It Viral-Worthy
+🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀
 
-### 🖤 Exactly Zero Databases Needed (Serverless & Decentralized Friendly)
-Scribbleee is architected to run with zero server-side database dependencies:
-- **Local Client Foundry**: Draft projects, stroke buffers, and SVG paths are persisted instantly in browser storage with sub-millisecond serialization.
-- **Git-as-a-Backend Ready**: Built to natively integrate with public GitHub repository JSON archives or decentralized **IPFS** networks (Pinata / Web3.Storage) for peer-to-peer community font sharing without hosting costs or admin friction.
+## 💖 Why Zero Database? The Open Community Layout
 
-### 🎨 3 Built-In Algorithmic Font Templates
-Never stare at a blank canvas! Load complete mathematical arc-based stroke definitions into any letter or **Bulk Apply** across your entire project:
-1. 🎀 **Dainty Script**: Delicate, flowing cursive aesthetic loops.
-2. 🪨 **Bold Chunky**: Thick, punchy Neo-Brutalist bubble characters.
-3. ✏️ **Sketchy Doodle**: Energetic, multi-pass notebook doodle vibes.
+Building a vibrant, unstoppable community section for Scribbleee without setting up or paying for a traditional backend database is one of our proudest architectural triumphs. We offload data storage completely using two zero-infrastructure paradigms:
 
-### 🌐 Bilingual Unicode Support (English & Bangla)
-Design without boundaries! Scribbleee includes full glyph maps and grid navigation for:
-- **English Standard**: `A-Z`, `a-z`, `0-9`
-- **Full Bangla Script**: `ক–ঁ`, `অ–ঔ`, `০–৯` along with native vowel marks and conjunct compatibility.
-
-### ⚡ Pure Client-Side 4-Format Universal Export Engine
-Harnessing the power of `opentype.js` and custom binary wrappers, Scribbleee compiles raw canvas points into fully valid font files in real-time:
-| Format | Extension | Ideal Use Case |
-| :--- | :---: | :--- |
-| **TrueType Font** | `.ttf` | Universal installation across macOS (Font Book), Windows, Linux, & iOS/Android apps |
-| **OpenType Font** | `.otf` | Advanced typographic features for Adobe Illustrator, Photoshop, Figma, & Procreate |
-| **Web Font** | `.woff` | Native web application embedding via CSS `@font-face` |
-| **Compressed Web Font** | `.woff2` | High-performance, lightweight modern website deployments |
-
-### 🎬 12 FPS Stop-Motion Typographic Animation Engine
-Experience pure-code motion design! Scribbleee features a hardcoded 5-variant structural animation system that loops individual letterforms independently at a snappy **12 FPS flipbook pace**—creating an authentic stop-motion doodle aesthetic without needing GIF or video assets.
-
-### 📱 Live Type Tester & Instagram Story Specimen Generator
-- **Live `@font-face` Injection**: Test your font immediately as you draw. Your strokes are dynamically wrapped into an in-memory blob URL and injected into CSS so you can type real sample paragraphs.
-- **Specimen PNG & Story Video Export**: Download high-resolution PNG type specimens or export 1080x1920 WebM videos tailored specifically for **Instagram Stories** and Reels!
-
----
-
-## 🏗 Technical Architecture
+### Method 1 🌸 The GitHub Driven Archive (Git As A Backend)
+Instead of saving fonts to a vulnerable database table, Scribbleee can dynamically submit user-created fonts directly into a public GitHub repository using automated serverless APIs and Pull Requests!
 
 ```
-[ User Drawing Canvas ] (Perfect-Freehand Splines)
+[ User Submits Font ] 
          │
          ▼
-[ Stroke Normalizer ]   ──>   [ SVG Path Converter ] (Cubic Bézier Approximation)
-                                       │
-                                       ▼
-                              [ opentype.js Engine ]
-                                       │
-         ┌─────────────────────────────┼─────────────────────────────┐
-         ▼                             ▼                             ▼
-   [ TTF / OTF ArrayBuffer ]     [ WOFF1 Binary Wrapper ]     [ Base64 CSS DataURL ]
-         │                             │                             │
-         ▼                             ▼                             ▼
- [ Desktop Font Download ]     [ Web Deployment File ]      [ Live @font-face Inject ]
+[ Serverless API Triggers PR via GitHub API ] 
+         │
+         ▼
+[ Automated GitHub Action Auto Merges PR ] 
+         │
+         ▼
+[ Scribbleee Community Page Reads Static JSON via CDN ]
 ```
 
-### Key Technical Highlights
-- **Smooth Stroke Splines**: Uses `perfect-freehand` algorithm to generate pressure-sensitive, beautifully tapered outline contours from mouse, trackpad, or Apple Pencil inputs.
-- **SVG Path Engineering**: Converts canvas point arrays into optimized SVG `M`, `C`, `Q`, `L`, and `Z` path commands properly scaled to standard **1000 UPM (Units Per Em)** typography bounding boxes.
-- **Uncompressed WOFF Binary Wrapping**: Implements compliant WOFF table directory structures directly in client-side JavaScript, enabling lightweight web font creation without requiring WebAssembly compression binaries.
+#### How It Works
+* **The Collection File:** We maintain a single public JSON file (`community-fonts.json`) inside our GitHub archive repository.
+* **Submitting Without Login:** When an artist finishes crafting a font and clicks **Upload to Community**, a lightweight serverless function takes the metadata (name, author, glyph tags, and Base64 font string) and triggers the GitHub API to append it directly.
+* **The Display:** The Scribbleee community page fetches the raw JSON archive via super-fast global CDNs like **jsDelivr** or **GitHub Pages**.
 
----
+#### Why This Fits Perfectly
+* **100% Free & Unlimited:** GitHub handles all hosting, version histories, and global bandwidth costs forever.
+* **Built In Moderation Tool:** No heavy admin dashboard needed! If someone uploads an inappropriate or broken font, moderation is as simple as deleting one line in a GitHub file from your phone.
+
+⭐ ─── ⭐ ─── ⭐
+
+### Method 2 🪐 IPFS & P2P Decentralized Storage
+For total independence from centralized hosting providers, Scribbleee integrates with the InterPlanetary File System (IPFS) via open gateways!
+
+```
+[ User Submits Font ] 
+         │
+         ▼
+[ Direct Browser Upload To Peer To Peer IPFS Network ] 
+         │
+         ▼
+[ Returns Immutable Unique Content Identifier (CID) ] 
+         │
+         ▼
+[ Stored & Mirrored Globally Across Network Nodes ]
+```
+
+#### How It Works
+* **Direct Browser Upload:** When published, your font binary compiles in browser memory and pushes directly into the peer-to-peer IPFS network.
+* **The Immutable Address:** IPFS generates a cryptographic, permanent Content Identifier (`CID`) hash for the font.
+* **Universal Sharing:** Anyone can download and preview the font instantly using simple public URLs like `https://ipfs.io/ipfs/YOUR_FONT_HASH`.
+
+#### Why This Fits Perfectly
+* **Zero Infrastructure:** No server bills, no user credentials to store, and total ownership belongs to the global community.
+* **Unstoppable Scaling:** Millions of unique fonts can be added without increasing overhead by even one penny.
+
+🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀
+
+## ✨ Viral & Technical Feature Matrix
+
+### 🎨 Built In Algorithmic Font Templates
+Never stare at an empty grid! Choose from three built-in mathematical curve styles and **Bulk Fill** every empty character instantly:
+1. 🎀 **Dainty Script:** Flowing, elegant cursive loops.
+2. 🪨 **Bold Chunky:** Thick, punchy Neo-Brutalist bubble typography.
+3. ✏️ **Sketchy Doodle:** Playful, high-energy multi-pass sketchbook lines.
+
+### 🌐 Full Bilingual Support (English & Bangla)
+Craft typography across cultures! Scribbleee features dedicated glyph studios for:
+* **English Standard:** `A–Z`, `a–z`, `0–9` plus punctuation.
+* **Full Bangla Script:** `ক–ঁ`, `অ–ঔ`, `০–৯` along with vowel signs and complex conjunct handling.
+
+### ⚡ Pure Client Side 4 Format Universal Export
+Compile your custom splines into valid font files in milliseconds:
+* 💾 **TTF (TrueType Font):** Universal support across Windows, macOS Font Book, Linux, and mobile apps.
+* 📐 **OTF (OpenType Font):** Professional design workflows in Adobe Illustrator, Figma, and Photoshop.
+* 🌐 **WOFF & WOFF2:** Native, compressed web font formats ready for CSS `@font-face` embedding.
+
+### 🎬 12 FPS Stop Motion Typographic Animation Engine
+Replicate the tactile charm of paper flipbooks! Scribbleee features a pure-code typographic animation engine that generates 5 distinct geometric variants per letter and loops them independently at a snappy **12 FPS stop-motion pace** without using heavy external GIFs or video assets.
+
+### 📱 Live Type Tester & Instagram Story Generator
+* **Live `@font-face` Injection:** Type real sample paragraphs in your font immediately while drafting.
+* **Instagram Ready:** Export high-resolution type specimen PNGs or 1080x1920 WebM story videos customized for social media sharing.
+
+🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀
 
 ## 🚀 Quick Start Guide
 
-Run Scribbleee locally on your machine in under 30 seconds:
+Run Scribbleee on your local machine in under 30 seconds:
 
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+```bash
+# Clone the repository
+git clone https://github.com/labonysur-cloud/Scribbleee.git
 
-### Installation
+# Enter workspace
+cd Scribbleee
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/labonysur-cloud/Scribbleee.git
-   cd Scribbleee
-   ```
+# Install dependencies
+npm install
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+# Launch development studio
+npm run dev
+```
 
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+Open `http://localhost:5173` in your browser and start crafting your custom fonts!
 
-4. **Open your browser**  
-   Navigate to `http://localhost:5173` and start crafting your cute custom typography!
+🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀 ─── 👑 ─── 🎀
 
----
-
-## 💅 Design Tokens & Aesthetic System
-
-Scribbleee strictly enforces a high-contrast Neo-Brutalist palette softened with Princess-Cute accents:
+## 💅 Aesthetic Tokens & Neo Brutalism
 
 ```css
 :root {
-  /* Core Monochrome Brutalism */
+  /* Core Monochrome Foundation */
   --black: #0d0d0d;
   --white: #ffffff;
   --cream: #fbf9f5;
-  --cream-dark: #f3efe6;
 
-  /* Whimsical Princess Palette */
-  --accent-pink: #ff85a1;
-  --accent-rose: #ffb3c6;
-  --accent-purple: #c5a3ff;
-  --accent-yellow: #fde047;
+  /* Princess Cute Highlights */
+  --pink: #ff85a1;
+  --rose: #ffb3c6;
+  --purple: #c5a3ff;
+  --yellow: #fde047;
 
-  /* Sharp Hard Shadows & Borders */
+  /* Sharp Brutalist Shadows */
   --border: 2.5px solid var(--black);
   --shadow: 4px 4px 0px var(--black);
 }
 ```
 
----
-
-## 🤝 Contributing & Community
-
-We believe typography should be fun, accessible, and whimsical for everyone! Whether you want to add new font templates, optimize Bezier curve smoothing, or expand character sets:
-1. Fork the repo!
-2. Create your feature branch (`git checkout -b feature/cute-new-template`)
-3. Commit your changes (`git commit -m 'Add cute new font template'`)
-4. Push to the branch (`git push origin feature/cute-new-template`)
-5. Open a Pull Request!
-
----
-
-## 📜 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information. Crafted with love, doodles, and sharp borders! 👑✨🖤
+Crafted with love, sharp borders, and endless cute doodles! 👑✨🖤
