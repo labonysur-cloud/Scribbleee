@@ -158,8 +158,8 @@ export function createDrawingCanvas(options = {}) {
     position: relative;
     width: ${CANVAS_W}px;
     height: ${CANVAS_H}px;
+    min-height: ${CANVAS_H}px;
     max-width: 100%;
-    max-height: 100%;
     border: var(--border-lg);
     background: #ffffff;
     box-shadow: var(--shadow-lg);

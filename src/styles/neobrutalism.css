@@ -506,6 +506,7 @@ body {
     margin: 0 auto !important;
     display: block !important;
     position: relative !important;
+    flex-shrink: 0 !important;
   }
   .studio-canvas-wrapper canvas, .canvas-wrapper canvas {
     width: 100% !important;

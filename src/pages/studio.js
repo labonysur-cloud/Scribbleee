@@ -148,7 +148,7 @@ export function renderStudio(container, navigate) {
   // Canvas wrapper (for zoom transform)
   const canvasWrapper = document.createElement('div');
   canvasWrapper.className = 'studio-canvas-wrapper';
-  canvasWrapper.style.cssText = `position:relative;transition:transform 0.2s;width:500px;height:600px;max-width:100%;display:flex;justify-content:center;align-items:center;`;
+  canvasWrapper.style.cssText = `position:relative;transition:transform 0.2s;width:500px;height:600px;min-height:600px;max-width:100%;flex-shrink:0;display:flex;justify-content:center;align-items:center;`;
   canvasWrapper.appendChild(ghostLetter);
 
   canvasApi = createDrawingCanvas({
@@ -164,10 +164,12 @@ export function renderStudio(container, navigate) {
       markUnsaved();
     },
   });
-  canvasApi.element.style.width     = '100%';
-  canvasApi.element.style.height    = '100%';
-  canvasApi.element.style.position  = 'relative';
-  canvasApi.element.style.zIndex    = '1';
+  canvasApi.element.style.width      = '100%';
+  canvasApi.element.style.height     = '100%';
+  canvasApi.element.style.minHeight  = '100%';
+  canvasApi.element.style.flexShrink = '0';
+  canvasApi.element.style.position   = 'relative';
+  canvasApi.element.style.zIndex     = '1';
   canvasWrapper.appendChild(canvasApi.element);
   centerCol.appendChild(canvasWrapper);
 
