@@ -328,48 +328,39 @@ export function renderHome(container, navigate) {
   </style>
 
   <!-- Hero -->
-  <section class="hero" style="background:#FFF0F5; border-bottom: 4px solid #000; padding: var(--space-12) var(--space-4) var(--space-10);">
+  <section class="hero" style="background:#ffd1dc; border-bottom: 4px solid #000; padding: var(--space-12) var(--space-4) var(--space-12);">
     <div style="max-width: 940px; margin: 0 auto; position: relative;">
       <!-- Background floating vector shapes -->
       <div style="position:absolute; inset:0; pointer-events:none; opacity:0.35; display:flex; justify-content:space-around; align-items:center;">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color:#ff69b4; animation:floatUp 3s infinite ease-in-out;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493; animation:floatUp 3s infinite ease-in-out;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
         <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="color:#000;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
       </div>
 
-      <!-- Prominent centered Neo-Brutalist Banner -->
-      <div style="background: #ffffff; border: 4px solid #000; box-shadow: 6px 6px 0px #000; border-radius: 20px; padding: var(--space-8) var(--space-6); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2;">
-        
-        <div style="display:inline-flex; align-items:center; gap:8px; background:#fce7f3; border:2px solid #000; box-shadow:2px 2px 0px #000; padding: 6px 16px; border-radius: 999px; margin-bottom: var(--space-5);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
-          <span style="font-family:var(--font-doodle); font-weight:800; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.1em; color:#000;">Princess Brutalism Foundry</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
-        </div>
-
-        <!-- Slowed-down Stop-Motion Flipbook Logo Text -->
-        <h1 class="hero__title stopmotion-logo" id="hero-stopmotion-logo" style="margin-bottom:var(--space-4); display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:6px; font-size:clamp(2.8rem, 7vw, 5.8rem); line-height:1.1;">
+      <!-- Prominent centered Neo-Brutalist White Box with ONLY the animation inside -->
+      <div style="background: #ffffff; border: 4px solid #000; box-shadow: 8px 8px 0px #000; border-radius: 28px; padding: var(--space-12) var(--space-6); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
+        <!-- Slowed-down Stop-Motion Flipbook Logo Text ONLY -->
+        <h1 class="hero__title stopmotion-logo" id="hero-stopmotion-logo" style="margin:0; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; font-size:clamp(3.2rem, 8vw, 6.5rem); line-height:1.1;">
           <!-- Populated dynamically / animated at ~5.5 FPS -->
         </h1>
+      </div>
 
-        <p class="hero__sub" style="margin-bottom:var(--space-6); max-width:620px; font-family:var(--font-doodle); font-size:1.35rem; color:#444;">
+      <!-- Subtitle and CTAs placed below the white box on the beautiful pink page -->
+      <div style="margin-top: var(--space-8); position: relative; z-index: 2;">
+        <p class="hero__sub" style="margin-bottom:var(--space-6); max-width:620px; font-family:var(--font-doodle); font-size:1.4rem; color:#222;">
           The most adorable font creation studio on the planet.
           Draw custom English and Bangla fonts, generate real font files,
           and export Instagram-ready animations. No login ever.
         </p>
 
         <div class="hero__ctas" style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center;">
-          <button class="btn btn--cute-pink btn--lg" id="home-cta-draw" style="font-family:var(--font-doodle); font-size:1.3rem; font-weight:800; padding:12px 30px;">
+          <button class="btn btn--cute-pink btn--lg" id="home-cta-draw" style="font-family:var(--font-doodle); font-size:1.35rem; font-weight:800; padding:14px 32px;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             Start Drawing Now
           </button>
-          <button class="btn btn--cute-mint btn--lg" id="home-cta-library" style="font-family:var(--font-doodle); font-size:1.3rem; font-weight:800; padding:12px 30px;">
+          <button class="btn btn--cute-mint btn--lg" id="home-cta-library" style="font-family:var(--font-doodle); font-size:1.35rem; font-weight:800; padding:14px 32px;">
             Explore Fonts
           </button>
-        </div>
-
-        <div style="margin-top:var(--space-5); font-family:var(--font-doodle); font-size:0.85rem; background:#000; color:#ffb6c1; padding: 6px 16px; border-radius:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; box-shadow:3px 3px 0px #ff69b4; display:flex; align-items:center; gap:8px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#ff69b4;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
-          <span>Handcrafted Stop-Motion Loop • Zero Emoji Assets</span>
         </div>
       </div>
     </div>

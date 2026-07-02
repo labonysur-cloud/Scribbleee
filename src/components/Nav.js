@@ -2,7 +2,7 @@
 export function createNav(navigate, activeRoute) {
   const nav = document.createElement('nav');
   nav.className = 'nav';
-  nav.style.cssText = 'background: #fff0f5; border-bottom: 4px solid #000; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 0 rgba(0,0,0,0.08);';
+  nav.style.cssText = 'background: #ffdfea; border-bottom: 4px solid #000; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 0 rgba(0,0,0,0.08);';
 
   const isHome = activeRoute === '' || activeRoute === 'home';
   const isStudio = activeRoute === 'studio';
