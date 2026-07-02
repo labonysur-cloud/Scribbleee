@@ -1,4 +1,4 @@
-// ── DrawingCanvas.js — Perfect freehand drawing on canvas ──
+// ── DrawingCanvas.js — Perfect freehand drawing & ready-made symbols on canvas ──
 import { getStroke } from 'perfect-freehand';
 
 const CANVAS_W = 500;
@@ -26,6 +26,100 @@ function getSvgPathFromStroke(stroke) {
   return d.join(' ');
 }
 
+// ── Ready-Made Shape Generator ──────────────────────────────────────────────
+export function generateShapePoints(shapeType, cx, cy, radius) {
+  const pts = [];
+
+  if (shapeType === 'heart') {
+    const n = 64;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      const x = cx + radius * (16 * Math.pow(Math.sin(t), 3)) / 16;
+      const y = cy - radius * (13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) / 16;
+      pts.push([x, y, 0.5]);
+    }
+  } else if (shapeType === 'star') {
+    const prongs = 5;
+    for (let i = 0; i <= prongs * 2; i++) {
+      const t = (i / (prongs * 2)) * Math.PI * 2 - Math.PI / 2;
+      const r = i % 2 === 0 ? radius : radius * 0.42;
+      pts.push([cx + r * Math.cos(t), cy + r * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'sparkle') {
+    const prongs = 4;
+    for (let i = 0; i <= prongs * 2; i++) {
+      const t = (i / (prongs * 2)) * Math.PI * 2 - Math.PI / 2;
+      const r = i % 2 === 0 ? radius : radius * 0.18;
+      pts.push([cx + r * Math.cos(t), cy + r * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'circle') {
+    const n = 50;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      pts.push([cx + radius * Math.cos(t), cy + radius * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'flower') {
+    const n = 64;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      const r = radius * (0.65 + 0.35 * Math.cos(5 * t));
+      pts.push([cx + r * Math.cos(t), cy + r * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'cloud') {
+    const n = 64;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      const r = radius * (0.75 + 0.25 * Math.abs(Math.sin(3 * t)));
+      pts.push([cx + r * 1.3 * Math.cos(t), cy + r * 0.8 * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'crown') {
+    const w = radius * 1.1;
+    const h = radius * 0.8;
+    pts.push(
+      [cx - w, cy + h * 0.6, 0.5],
+      [cx - w * 0.9, cy - h * 0.5, 0.5],
+      [cx - w * 0.4, cy + h * 0.1, 0.5],
+      [cx, cy - h * 0.8, 0.5],
+      [cx + w * 0.4, cy + h * 0.1, 0.5],
+      [cx + w * 0.9, cy - h * 0.5, 0.5],
+      [cx + w, cy + h * 0.6, 0.5],
+      [cx - w, cy + h * 0.6, 0.5]
+    );
+  } else if (shapeType === 'bow') {
+    const n = 64;
+    for (let i = 0; i <= n; i++) {
+      const t = (i / n) * Math.PI * 2;
+      const denom = 1 + Math.sin(t) * Math.sin(t);
+      const x = cx + radius * 1.3 * Math.cos(t) / denom;
+      const y = cy + radius * 0.8 * Math.sin(t) * Math.cos(t) / denom;
+      pts.push([x, y, 0.5]);
+    }
+  } else if (shapeType === 'moon') {
+    const n = 30;
+    for (let i = 0; i <= n; i++) {
+      const t = -Math.PI/2 + (i / n) * Math.PI;
+      pts.push([cx + radius * Math.cos(t), cy + radius * Math.sin(t), 0.5]);
+    }
+    for (let i = n; i >= 0; i--) {
+      const t = Math.PI/2 - (i / n) * Math.PI;
+      pts.push([cx + radius * 0.55 * Math.cos(t) + radius * 0.35, cy + radius * Math.sin(t), 0.5]);
+    }
+  } else if (shapeType === 'bolt') {
+    const w = radius * 0.55;
+    const h = radius * 1.05;
+    pts.push(
+      [cx + w * 0.2, cy - h, 0.5],
+      [cx - w, cy + h * 0.1, 0.5],
+      [cx - w * 0.1, cy + h * 0.1, 0.5],
+      [cx - w * 0.3, cy + h, 0.5],
+      [cx + w, cy - h * 0.1, 0.5],
+      [cx + w * 0.1, cy - h * 0.1, 0.5],
+      [cx + w * 0.2, cy - h, 0.5]
+    );
+  }
+  return pts;
+}
+
 export function createDrawingCanvas(options = {}) {
   const {
     onStrokeComplete,
@@ -51,6 +145,11 @@ export function createDrawingCanvas(options = {}) {
   let tool = 'pen'; // 'pen' | 'eraser'
   let history = [JSON.parse(JSON.stringify(strokes))];
   let historyIndex = 0;
+
+  // Stamp mode
+  let stampMode = false;
+  let stampShapeType = 'heart';
+  let stampOptions = { radius: 80, thickness: 8, fillMode: 'outline' };
 
   // DOM
   const wrapper = document.createElement('div');
@@ -99,54 +198,82 @@ export function createDrawingCanvas(options = {}) {
     // Descender — y=530
     const descender = 530;
 
-    // ── Draw background ghost/template character for easy tracing ──
+    gCtx.lineWidth = 1;
+
+    // Cap height line
+    gCtx.beginPath();
+    gCtx.strokeStyle = '#e0e0e0';
+    gCtx.setLineDash([6, 6]);
+    gCtx.moveTo(0, capheight);
+    gCtx.lineTo(CANVAS_W, capheight);
+    gCtx.stroke();
+
+    // X-height line
+    gCtx.beginPath();
+    gCtx.strokeStyle = '#d0d0d0';
+    gCtx.setLineDash([4, 4]);
+    gCtx.moveTo(0, xheight);
+    gCtx.lineTo(CANVAS_W, xheight);
+    gCtx.stroke();
+
+    // Baseline (heavy pink)
+    gCtx.beginPath();
+    gCtx.strokeStyle = '#ff69b4';
+    gCtx.lineWidth = 2;
+    gCtx.setLineDash([]);
+    gCtx.moveTo(0, baseline);
+    gCtx.lineTo(CANVAS_W, baseline);
+    gCtx.stroke();
+
+    // Descender line
+    gCtx.beginPath();
+    gCtx.strokeStyle = '#e0e0e0';
+    gCtx.lineWidth = 1;
+    gCtx.setLineDash([6, 6]);
+    gCtx.moveTo(0, descender);
+    gCtx.lineTo(CANVAS_W, descender);
+    gCtx.stroke();
+
+    // Labels
+    gCtx.font = '11px var(--font-doodle)';
+    gCtx.fillStyle = '#ff69b4';
+    gCtx.fillText('baseline', 10, baseline - 6);
+    gCtx.fillStyle = '#a0a0a0';
+    gCtx.fillText('x-height', 10, xheight - 6);
+    gCtx.fillText('cap-height', 10, capheight - 6);
+    gCtx.fillText('descender', 10, descender - 6);
+
+    // Render Crisp Centered Template Character
     if (templateChar && templateOpacity > 0) {
       gCtx.save();
       gCtx.globalAlpha = templateOpacity;
-      let fontFam = 'Space Grotesk, system-ui, sans-serif';
-      if (templateStyle === 'serif') fontFam = 'Georgia, serif';
-      if (templateStyle === 'doodle' || templateStyle === 'sketchy') fontFam = 'var(--font-doodle), cursive';
-      gCtx.font = `bold 340px ${fontFam}`;
+      gCtx.fillStyle = '#000000';
       gCtx.textAlign = 'center';
       gCtx.textBaseline = 'alphabetic';
 
-      // Clean light gray fill
-      gCtx.fillStyle = '#e2e2e2';
-      gCtx.fillText(templateChar, CANVAS_W / 2, baseline);
+      let fontStyleStr = 'bold 360px sans-serif';
+      if (templateStyle === 'serif') fontStyleStr = 'bold 360px Georgia, serif';
+      if (templateStyle === 'mono')  fontStyleStr = 'bold 360px monospace';
+      if (templateStyle === 'cursive') fontStyleStr = 'italic bold 360px "Comic Sans MS", cursive';
+      if (templateStyle === 'bubbly')  fontStyleStr = '900 370px "Fredoka One", cursive, sans-serif';
 
-      // Crisp border stroke like screenshot
-      gCtx.strokeStyle = '#cccccc';
-      gCtx.lineWidth = 5;
-      gCtx.strokeText(templateChar, CANVAS_W / 2, baseline);
+      gCtx.font = fontStyleStr;
+      gCtx.fillText(templateChar, CANVAS_W / 2, baseline);
       gCtx.restore();
     }
 
-    const lines = [
-      { y: capheight,  color: '#e0e0e0', label: 'Cap height', dashed: false },
-      { y: xheight,    color: '#e8e8e8', label: 'x-height',   dashed: true },
-      { y: baseline,   color: '#c0c0c0', label: 'Baseline',    dashed: false },
-      { y: descender,  color: '#e8e8e8', label: 'Descender',   dashed: true },
-    ];
+    // Side margins
+    gCtx.beginPath();
+    gCtx.strokeStyle = '#f0f0f0';
+    gCtx.setLineDash([]);
+    gCtx.moveTo(40, 0);
+    gCtx.lineTo(40, CANVAS_H);
+    gCtx.moveTo(CANVAS_W - 40, 0);
+    gCtx.lineTo(CANVAS_W - 40, CANVAS_H);
+    gCtx.stroke();
 
-    lines.forEach(({ y, color, label, dashed }) => {
-      gCtx.beginPath();
-      gCtx.strokeStyle = color;
-      gCtx.lineWidth = 1;
-      if (dashed) gCtx.setLineDash([6, 4]);
-      else gCtx.setLineDash([]);
-      gCtx.moveTo(0, y);
-      gCtx.lineTo(CANVAS_W, y);
-      gCtx.stroke();
-
-      gCtx.font = '10px Space Grotesk, sans-serif';
-      gCtx.fillStyle = '#bbb';
-      gCtx.setLineDash([]);
-      gCtx.fillText(label, 4, y - 3);
-    });
-
-    // Left / Right bearing markers
-    gCtx.fillStyle = '#ccc';
-    gCtx.font = 'bold 11px Space Grotesk, sans-serif';
+    gCtx.font = '10px var(--font-doodle)';
+    gCtx.fillStyle = '#c0c0c0';
     gCtx.fillText('L', 10, CANVAS_H / 2);
     gCtx.fillText('R', CANVAS_W - 20, CANVAS_H / 2);
 
@@ -166,15 +293,29 @@ export function createDrawingCanvas(options = {}) {
 
     strokes.forEach((stroke) => {
       if (!stroke.points || stroke.points.length < 2) return;
-      const opts = { ...(BRUSH_STYLES[stroke.style] || BRUSH_STYLES.pencil), size: stroke.size };
-      const outlined = getStroke(stroke.points, opts);
-      const pathData = getSvgPathFromStroke(outlined);
-      const path2d = new Path2D(pathData);
 
-      dCtx.globalAlpha = stroke.opacity ?? 1;
-      dCtx.fillStyle = stroke.eraser ? '#ffffff' : '#0d0d0d';
-      dCtx.fill(path2d);
-      dCtx.globalAlpha = 1;
+      if (stroke.isPolygon && stroke.fillMode === 'solid') {
+        let pathData = '';
+        stroke.points.forEach(([x, y], i) => {
+          pathData += (i === 0 ? `M ${x} ${y} ` : `L ${x} ${y} `);
+        });
+        pathData += 'Z';
+        const path2d = new Path2D(pathData);
+        dCtx.globalAlpha = stroke.opacity ?? 1;
+        dCtx.fillStyle = stroke.eraser ? '#ffffff' : '#0d0d0d';
+        dCtx.fill(path2d);
+        dCtx.globalAlpha = 1;
+      } else {
+        const opts = { ...(BRUSH_STYLES[stroke.style] || BRUSH_STYLES.pencil), size: stroke.size };
+        const outlined = getStroke(stroke.points, opts);
+        const pathData = getSvgPathFromStroke(outlined);
+        const path2d = new Path2D(pathData);
+
+        dCtx.globalAlpha = stroke.opacity ?? 1;
+        dCtx.fillStyle = stroke.eraser ? '#ffffff' : '#0d0d0d';
+        dCtx.fill(path2d);
+        dCtx.globalAlpha = 1;
+      }
     });
 
     // Current stroke
@@ -204,20 +345,25 @@ export function createDrawingCanvas(options = {}) {
 
   function startStroke(e) {
     e.preventDefault();
+    if (stampMode) {
+      const [x, y] = getPos(e);
+      api.addShape(stampShapeType, { ...stampOptions, cx: x, cy: y });
+      return;
+    }
     isDrawing = true;
     currentPoints = [getPos(e)];
     render();
   }
 
   function continueStroke(e) {
-    if (!isDrawing) return;
+    if (!isDrawing || stampMode) return;
     e.preventDefault();
     currentPoints.push(getPos(e));
     render();
   }
 
   function endStroke(e) {
-    if (!isDrawing) return;
+    if (!isDrawing || stampMode) return;
     isDrawing = false;
 
     if (currentPoints.length >= 2) {
@@ -261,14 +407,59 @@ export function createDrawingCanvas(options = {}) {
   const api = {
     element: wrapper,
 
-    setBrushStyle(style) { brushStyle = style; },
+    setBrushStyle(style) {
+      brushStyle = style;
+      stampMode = false;
+      drawCanvas.style.cursor = tool === 'eraser' ? 'cell' : 'crosshair';
+    },
     setBrushSize(size) { brushSize = size; },
     setOpacity(o) { opacity = o; },
     setTool(t) {
       tool = t;
       erasing = t === 'eraser';
+      stampMode = false;
       drawCanvas.style.cursor = t === 'eraser' ? 'cell' : 'crosshair';
     },
+
+    addShape(shapeType, options = {}) {
+      const cx = options.cx ?? CANVAS_W / 2;
+      const cy = options.cy ?? CANVAS_H / 2;
+      const radius = options.radius ?? 80;
+      const fillMode = options.fillMode ?? 'outline';
+      const thickness = options.thickness ?? 8;
+
+      const points = generateShapePoints(shapeType, cx, cy, radius);
+      if (!points || points.length < 3) return;
+
+      const newStroke = {
+        points,
+        style: 'pencil',
+        size: thickness,
+        opacity: 1,
+        eraser: false,
+        isPolygon: true,
+        fillMode,
+      };
+      strokes.push(newStroke);
+      history = history.slice(0, historyIndex + 1);
+      history.push(JSON.parse(JSON.stringify(strokes)));
+      historyIndex = history.length - 1;
+      render();
+      onStrokeComplete?.(strokes);
+    },
+
+    setStampMode(active, shapeType = 'heart', options = {}) {
+      stampMode = !!active;
+      if (stampMode) {
+        stampShapeType = shapeType;
+        stampOptions = options;
+        drawCanvas.style.cursor = 'copy';
+      } else {
+        drawCanvas.style.cursor = tool === 'eraser' ? 'cell' : 'crosshair';
+      }
+    },
+
+    isStampMode() { return stampMode; },
 
     undo() {
       if (historyIndex > 0) {
@@ -310,13 +501,34 @@ export function createDrawingCanvas(options = {}) {
       // Combine all strokes into a simplified SVG path string for font building
       let path = '';
       strokes.forEach((stroke) => {
-        if (!stroke.points || stroke.points.length < 2 || stroke.eraser) return;
-        const pts = stroke.points;
-        path += `M ${pts[0][0]} ${pts[0][1]} `;
-        for (let i = 1; i < pts.length; i++) {
-          path += `L ${pts[i][0]} ${pts[i][1]} `;
+        if (!stroke.points || stroke.points.length < 2) return;
+        if (stroke.eraser) {
+          // Reversed point order for eraser strokes creates clean compound cutouts
+          const pts = [...stroke.points].reverse();
+          path += `M ${pts[0][0]} ${pts[0][1]} `;
+          for (let i = 1; i < pts.length; i++) {
+            path += `L ${pts[i][0]} ${pts[i][1]} `;
+          }
+          path += 'Z ';
+        } else if (stroke.isPolygon && stroke.fillMode === 'solid') {
+          const pts = stroke.points;
+          path += `M ${pts[0][0]} ${pts[0][1]} `;
+          for (let i = 1; i < pts.length; i++) {
+            path += `L ${pts[i][0]} ${pts[i][1]} `;
+          }
+          path += 'Z ';
+        } else {
+          // Export exact brush outline contour
+          const opts = { ...(BRUSH_STYLES[stroke.style] || BRUSH_STYLES.pencil), size: stroke.size };
+          const outlined = getStroke(stroke.points, opts);
+          if (outlined && outlined.length >= 2) {
+            path += `M ${outlined[0][0]} ${outlined[0][1]} `;
+            for (let i = 1; i < outlined.length; i++) {
+              path += `L ${outlined[i][0]} ${outlined[i][1]} `;
+            }
+            path += 'Z ';
+          }
         }
-        path += 'Z ';
       });
       return path.trim();
     },

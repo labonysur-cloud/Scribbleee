@@ -76,10 +76,13 @@ export function renderStudio(container, navigate) {
   const editor = document.createElement('div');
   editor.style.cssText = `display:flex;flex:1;overflow:hidden;`;
 
+  let exitStampModeUI = () => {};
+
   // Tool panel (left)
   toolApi = createToolPanel({
     onChange(state) {
       if (!canvasApi) return;
+      exitStampModeUI();
       canvasApi.setBrushStyle(state.brushStyle);
       canvasApi.setBrushSize(state.brushSize);
       canvasApi.setOpacity(state.opacity / 100);
@@ -176,6 +179,140 @@ export function renderStudio(container, navigate) {
   `;
   centerCol.appendChild(canvasControls);
 
+  // Ready-Made Symbols toolbar
+  const symbolsBar = document.createElement('div');
+  symbolsBar.style.cssText = `
+    width:100%; max-width:500px;
+    background: var(--white);
+    border: 3px solid var(--black);
+    box-shadow: 4px 4px 0 var(--black);
+    padding: var(--space-3) var(--space-4);
+    display: flex; flex-direction: column; gap: var(--space-3);
+  `;
+  symbolsBar.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <span style="font-family:var(--font-doodle); font-weight:800; font-size:1.05rem; color:#ff1493; display:flex; align-items:center; gap:6px;">
+        ✨ Ready-Made Symbols & Shapes
+      </span>
+      <div style="display:flex; gap:12px; font-family:var(--font-doodle); font-size:0.88rem;">
+        <label style="cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:700;">
+          <input type="radio" name="sym-fill-mode" value="outline" checked style="cursor:pointer;" /> Outline
+        </label>
+        <label style="cursor:pointer; display:flex; align-items:center; gap:4px; font-weight:700;">
+          <input type="radio" name="sym-fill-mode" value="solid" style="cursor:pointer;" /> Solid Fill
+        </label>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;" id="symbol-buttons-grid">
+      <button class="btn btn--sm sym-btn btn--primary" data-sym="heart" style="font-family:var(--font-doodle);">❤️ Heart</button>
+      <button class="btn btn--sm sym-btn" data-sym="star" style="font-family:var(--font-doodle);">⭐ Star</button>
+      <button class="btn btn--sm sym-btn" data-sym="sparkle" style="font-family:var(--font-doodle);">✨ Sparkle</button>
+      <button class="btn btn--sm sym-btn" data-sym="circle" style="font-family:var(--font-doodle);">⭕ Circle</button>
+      <button class="btn btn--sm sym-btn" data-sym="flower" style="font-family:var(--font-doodle);">🌸 Flower</button>
+      <button class="btn btn--sm sym-btn" data-sym="cloud" style="font-family:var(--font-doodle);">☁️ Cloud</button>
+      <button class="btn btn--sm sym-btn" data-sym="crown" style="font-family:var(--font-doodle);">👑 Crown</button>
+      <button class="btn btn--sm sym-btn" data-sym="bow" style="font-family:var(--font-doodle);">🎀 Bow</button>
+      <button class="btn btn--sm sym-btn" data-sym="moon" style="font-family:var(--font-doodle);">🌙 Moon</button>
+      <button class="btn btn--sm sym-btn" data-sym="bolt" style="font-family:var(--font-doodle);">⚡ Bolt</button>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; border-top:2px dashed var(--gray-200); padding-top:10px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-family:var(--font-doodle); font-size:0.88rem; color:var(--gray-500); font-weight:700;">Size:</span>
+        <input type="range" min="30" max="220" value="85" id="sym-size-slider" style="width:110px; cursor:pointer;" />
+        <span style="font-family:var(--font-doodle); font-size:0.9rem; font-weight:800; color:var(--black); min-width:45px;" id="sym-size-label">85px</span>
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn--sm" id="btn-drop-center-sym" style="font-family:var(--font-doodle); font-weight:800; background:#ffe4e1; border-color:#ff69b4;">
+          + Drop to Center
+        </button>
+        <button class="btn btn--sm" id="btn-toggle-stamp" style="font-family:var(--font-doodle); font-weight:800; background:#e0ffff; border-color:#00ced1;">
+          👆 Tap Canvas to Stamp
+        </button>
+      </div>
+    </div>
+
+    <div style="font-family:var(--font-doodle); font-size:0.82rem; color:#444; text-align:center; background:#fff0f5; padding:6px 10px; border-radius:10px; border:1px solid #ffb6c1;">
+      💡 <b>Personalize & Cut-Out:</b> Stamp any shape onto your letter, then pick the <b>Eraser</b> tool on the left to erase sections or draw cute cut-out faces & decorations!
+    </div>
+  `;
+  centerCol.appendChild(symbolsBar);
+
+  let selectedSymType = 'heart';
+  let stampModeActive = false;
+
+  const stampBtn = symbolsBar.querySelector('#btn-toggle-stamp');
+  const symSizeSlider = symbolsBar.querySelector('#sym-size-slider');
+  const symSizeLabel  = symbolsBar.querySelector('#sym-size-label');
+
+  exitStampModeUI = () => {
+    if (stampModeActive) {
+      stampModeActive = false;
+      if (stampBtn) {
+        stampBtn.style.background = '#e0ffff';
+        stampBtn.style.color = 'var(--black)';
+        stampBtn.textContent = '👆 Tap Canvas to Stamp';
+      }
+    }
+  };
+
+  symbolsBar.querySelectorAll('.sym-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedSymType = btn.dataset.sym;
+      symbolsBar.querySelectorAll('.sym-btn').forEach(b => b.classList.remove('btn--primary'));
+      btn.classList.add('btn--primary');
+      if (stampModeActive) {
+        const size = parseInt(symSizeSlider.value || '85', 10);
+        const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+        canvasApi.setStampMode(true, selectedSymType, { radius: size, fillMode, thickness: 8 });
+      }
+    });
+  });
+
+  symSizeSlider.addEventListener('input', () => {
+    symSizeLabel.textContent = `${symSizeSlider.value}px`;
+    if (stampModeActive) {
+      const size = parseInt(symSizeSlider.value, 10);
+      const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+      canvasApi.setStampMode(true, selectedSymType, { radius: size, fillMode, thickness: 8 });
+    }
+  });
+
+  symbolsBar.querySelectorAll('input[name="sym-fill-mode"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (stampModeActive) {
+        const size = parseInt(symSizeSlider.value, 10);
+        const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+        canvasApi.setStampMode(true, selectedSymType, { radius: size, fillMode, thickness: 8 });
+      }
+    });
+  });
+
+  symbolsBar.querySelector('#btn-drop-center-sym').addEventListener('click', () => {
+    const size = parseInt(symSizeSlider.value, 10);
+    const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+    canvasApi.addShape(selectedSymType, { radius: size, fillMode, thickness: 8 });
+  });
+
+  stampBtn.addEventListener('click', () => {
+    stampModeActive = !stampModeActive;
+    const size = parseInt(symSizeSlider.value, 10);
+    const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+    if (stampModeActive) {
+      stampBtn.style.background = '#ff69b4';
+      stampBtn.style.color = '#fff';
+      stampBtn.textContent = '🔴 Exit Stamp Mode';
+      canvasApi.setStampMode(true, selectedSymType, { radius: size, fillMode, thickness: 8 });
+    } else {
+      stampBtn.style.background = '#e0ffff';
+      stampBtn.style.color = 'var(--black)';
+      stampBtn.textContent = '👆 Tap Canvas to Stamp';
+      canvasApi.setStampMode(false);
+    }
+  });
+
   // Preview strip (thumbnails of completed glyphs)
   const previewStripLabel = document.createElement('div');
   previewStripLabel.style.cssText = `font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-400);width:100%;max-width:500px;text-align:center;`;
@@ -218,8 +355,13 @@ export function renderStudio(container, navigate) {
     </button>
     <button class="tab-btn" data-tab="templates"
       style="flex:1;padding:var(--space-3);font-family:var(--font-doodle);font-size:0.82rem;
-             border:none;cursor:pointer;background:var(--cream);transition:background 0.1s;">
+             border:none;border-right:var(--border);cursor:pointer;background:var(--cream);transition:background 0.1s;">
       Templates
+    </button>
+    <button class="tab-btn" data-tab="symbols"
+      style="flex:1;padding:var(--space-3);font-family:var(--font-doodle);font-size:0.82rem;
+             border:none;cursor:pointer;background:var(--cream);transition:background 0.1s;">
+      ✨ Symbols
     </button>
   `;
 
@@ -323,6 +465,53 @@ export function renderStudio(container, navigate) {
   templatesTabEl.appendChild(tplGrid);
 
   tabContent.appendChild(templatesTabEl);
+
+  // ── SYMBOLS TAB ───────────────────────────────
+  const symbolsTabEl = document.createElement('div');
+  symbolsTabEl.id = 'tab-symbols';
+  symbolsTabEl.style.cssText = `flex:1;overflow:auto;display:none;flex-direction:column;padding:var(--space-4);gap:var(--space-4);`;
+  symbolsTabEl.innerHTML = `
+    <div style="font-family:var(--font-doodle);font-size:0.72rem;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:var(--space-2);">
+      Ready-Made Symbols Library
+    </div>
+    <p style="font-family:var(--font-doodle);font-size:0.82rem;color:var(--gray-500);margin-bottom:var(--space-2);">
+      Decorate your letters! Click "+ Add" to drop any symbol into the center of your canvas, then erase cut-out smiles or resize it.
+    </p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      ${[
+        { id: 'heart', name: '❤️ Heart Shape', desc: 'Classic cute romantic symbol' },
+        { id: 'star', name: '⭐ Star Shape', desc: 'A aesthetic 5-pointed star' },
+        { id: 'sparkle', name: '✨ Sparkle', desc: 'Twinkling 4-point sparkle' },
+        { id: 'circle', name: '⭕ Round Shape', desc: 'Perfect circular ring frame' },
+        { id: 'flower', name: '🌸 Flower', desc: 'Whimsical 5-petal blossom' },
+        { id: 'cloud', name: '☁️ Cloud', desc: 'Fluffy dream cloud shape' },
+        { id: 'crown', name: '👑 Princess Crown', desc: 'Royal tiara crest' },
+        { id: 'bow', name: '🎀 Cute Bow', desc: 'Sweet decorative ribbon' },
+        { id: 'moon', name: '🌙 Crescent Moon', desc: 'Dreamy nighttime crescent' },
+        { id: 'bolt', name: '⚡ Lightning Bolt', desc: 'Energetic zap bolt' },
+      ].map(sym => `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:2px solid var(--black);background:var(--cream);border-radius:10px;">
+          <div>
+            <strong style="font-family:var(--font-doodle);font-size:0.9rem;display:block;">${sym.name}</strong>
+            <span style="font-family:var(--font-doodle);font-size:0.75rem;color:var(--gray-500);">${sym.desc}</span>
+          </div>
+          <button class="btn btn--sm btn--primary right-sym-add" data-sym="${sym.id}" style="font-family:var(--font-doodle);font-weight:700;">
+            + Add
+          </button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+  symbolsTabEl.querySelectorAll('.right-sym-add').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const symType = btn.dataset.sym;
+      const size = parseInt(symbolsBar.querySelector('#sym-size-slider')?.value || '85', 10);
+      const fillMode = symbolsBar.querySelector('input[name="sym-fill-mode"]:checked')?.value || 'outline';
+      canvasApi.addShape(symType, { radius: size, fillMode, thickness: 8 });
+    });
+  });
+  tabContent.appendChild(symbolsTabEl);
+
   editor.appendChild(rightPanel);
   page.appendChild(editor);
 
@@ -387,10 +576,16 @@ export function renderStudio(container, navigate) {
       if (btn.dataset.tab === 'glyphs') {
         glyphsTabEl.style.display = 'flex';
         templatesTabEl.style.display = 'none';
-      } else {
+        symbolsTabEl.style.display = 'none';
+      } else if (btn.dataset.tab === 'templates') {
         glyphsTabEl.style.display = 'none';
         templatesTabEl.style.display = 'flex';
+        symbolsTabEl.style.display = 'none';
         updateTemplatePanel();
+      } else if (btn.dataset.tab === 'symbols') {
+        glyphsTabEl.style.display = 'none';
+        templatesTabEl.style.display = 'none';
+        symbolsTabEl.style.display = 'flex';
       }
     });
   });
