@@ -207,28 +207,29 @@ export function renderLibrary(container, navigate) {
   page.innerHTML += `
     <div class="library-header">
       <div>
-        <span class="label">Zero-Database Community Foundry</span>
-        <h1 class="section-title">Open Font Ecosystem 👑🎀</h1>
+        <span class="label" style="background:#fce7f3; padding:4px 12px; border:2px solid #000; box-shadow:2px 2px 0 #000; font-family:var(--font-doodle); font-weight:800; border-radius:12px;">Zero-Database Community Foundry</span>
+        <h1 class="section-title" style="margin-top:12px; font-size:clamp(2.5rem, 6vw, 4rem);">Open Font Ecosystem</h1>
       </div>
-      <button class="btn btn--primary" id="lib-create-btn" style="font-family:var(--font-doodle);font-size:1.05rem;">
-        + Draw & Publish Font
+      <button class="btn btn--cute-pink" id="lib-create-btn" style="font-family:var(--font-doodle);font-size:1.15rem; font-weight:800; padding:10px 24px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM17 13H13V17H11V13H7V11H11V7H13V11H17V13Z"/></svg>
+        Draw & Publish Font
       </button>
     </div>
 
-    <div class="zero-db-banner">
+    <div class="zero-db-banner card--cute-mint" style="max-width:1150px; margin:0 auto var(--space-6); padding:var(--space-6);">
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-2);">
-        <h2 style="font-family:var(--font-display);font-size:1.5rem;">🖤 How Our Database-Free Community Works</h2>
-        <span style="font-family:var(--font-doodle);font-size:0.82rem;color:var(--gray-400);">No signups · No servers · 100% Free Forever</span>
+        <h2 style="font-family:var(--font-display);font-size:1.7rem; font-weight:900;">How Our Database-Free Community Works</h2>
+        <span style="font-family:var(--font-doodle);font-size:0.95rem; font-weight:700; background:#000; color:#fff; padding:4px 12px; border-radius:12px;">No signups · No servers · 100% Free Forever</span>
       </div>
       <div class="zero-db-grid">
-        <div class="zero-db-card">
-          <h3>🌸 Method 1: GitHub-Driven Archive</h3>
+        <div class="zero-db-card" style="background:#fff; border:2px solid #000; border-radius:14px; box-shadow:4px 4px 0 #000;">
+          <h3 style="color:#ff1493;">Method 1: GitHub-Driven Archive</h3>
           <p>
-            Fonts are submitted directly into a public GitHub JSON file (<code>community-fonts.json</code>) via automated Pull Requests & serverless APIs. Our landing page reads this archive globally through lightning-fast CDNs like jsDelivr!
+            Fonts are submitted directly into a public GitHub JSON file (<code>community-fonts.json</code>) via automated Pull Requests & serverless APIs. Our landing page reads this archive globally through lightning-fast CDNs!
           </p>
         </div>
-        <div class="zero-db-card">
-          <h3>🪐 Method 2: IPFS P2P Network</h3>
+        <div class="zero-db-card" style="background:#fff; border:2px solid #000; border-radius:14px; box-shadow:4px 4px 0 #000;">
+          <h3 style="color:#10b981;">Method 2: IPFS P2P Network</h3>
           <p>
             When published to IPFS, the font binary is compiled in browser memory and pushed directly into decentralized nodes, generating a permanent, immutable Content Identifier (<code>CID</code>) link!
           </p>
@@ -237,10 +238,10 @@ export function renderLibrary(container, navigate) {
     </div>
 
     <div class="library-filters">
-      <span style="font-family:var(--font-doodle);font-weight:700;margin-right:var(--space-2);">Filter:</span>
+      <span style="font-family:var(--font-doodle);font-weight:700;margin-right:var(--space-2);font-size:1.1rem;">Filter:</span>
       <button class="btn btn--sm filter-btn active" data-filter="all">All Fonts</button>
-      <button class="btn btn--sm filter-btn" data-filter="github">🌸 GitHub Archive</button>
-      <button class="btn btn--sm filter-btn" data-filter="ipfs">🪐 IPFS CIDs</button>
+      <button class="btn btn--sm filter-btn" data-filter="github">GitHub Archive</button>
+      <button class="btn btn--sm filter-btn" data-filter="ipfs">IPFS CIDs</button>
       <span style="margin:0 var(--space-2);color:var(--gray-300);">|</span>
       <button class="btn btn--sm filter-btn" data-filter="english">English</button>
       <button class="btn btn--sm filter-btn" data-filter="bangla">Bangla</button>
@@ -320,8 +321,8 @@ function createFontCard(font, index, navigate) {
   const storageMethod = font.storageMethod || 'github';
 
   const badgeHtml = storageMethod === 'ipfs'
-    ? `<span class="storage-badge" style="background:#f3efe6;" title="Decentralized IPFS CID: ${font.cid || 'Qm...'}">🪐 IPFS P2P</span>`
-    : `<span class="storage-badge" title="Public GitHub Archive via CDN">🌸 GitHub CDN</span>`;
+    ? `<span class="storage-badge" style="background:#e0f2fe; color:#0369a1; border:2px solid #000; border-radius:10px; font-weight:700;" title="Decentralized IPFS CID: ${font.cid || 'Qm...'}">IPFS P2P</span>`
+    : `<span class="storage-badge" style="background:#fce7f3; color:#be185d; border:2px solid #000; border-radius:10px; font-weight:700;" title="Public GitHub Archive via CDN">GitHub CDN</span>`;
 
   card.innerHTML = `
     <div class="font-card__preview">
@@ -341,8 +342,8 @@ function createFontCard(font, index, navigate) {
           ${font.glyphCount || 0} glyphs · ${font.downloads || 0} dl · ${ago}
         </div>
         <div style="display:flex;gap:var(--space-2);">
-          ${font.ipfsGateway ? `<a href="${font.ipfsGateway}" target="_blank" class="btn btn--sm" style="font-family:var(--font-doodle);padding:4px 8px;" title="Open IPFS Gateway CID">🪐 Gateway</a>` : ''}
-          <button class="btn btn--sm btn--primary dl-btn" data-id="${font.id}" style="font-family:var(--font-doodle);">
+          ${font.ipfsGateway ? `<a href="${font.ipfsGateway}" target="_blank" class="btn btn--sm btn--cute-mint" style="font-family:var(--font-doodle);padding:4px 8px;font-weight:700;" title="Open IPFS Gateway CID">IPFS Gateway</a>` : ''}
+          <button class="btn btn--sm btn--cute-pink dl-btn" data-id="${font.id}" style="font-family:var(--font-doodle);font-weight:800;">
             Download
           </button>
         </div>

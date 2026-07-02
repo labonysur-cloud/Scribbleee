@@ -93,24 +93,86 @@ body {
 }
 
 .btn--primary {
-  background: var(--black);
-  color: var(--white);
+  background: var(--pink-accent);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0px var(--black);
+  font-weight: 700;
 }
 
 .btn--primary:hover {
-  background: var(--black);
+  background: var(--pink-hot);
+  color: var(--white);
+}
+
+.btn--cute-pink {
+  background: var(--pink-soft);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0px var(--black);
+  border-radius: 20px;
+}
+
+.btn--cute-pink:hover {
+  background: var(--pink);
+  transform: translate(-3px, -3px) rotate(-1deg);
+  box-shadow: 6px 6px 0px var(--black);
+}
+
+.btn--cute-mint {
+  background: var(--mint);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0px var(--black);
+  border-radius: 20px;
+}
+
+.btn--cute-mint:hover {
+  background: #bbf7d0;
+  transform: translate(-3px, -3px) rotate(1deg);
+  box-shadow: 6px 6px 0px var(--black);
+}
+
+.btn--cute-lavender {
+  background: var(--lavender);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0px var(--black);
+  border-radius: 20px;
+}
+
+.btn--cute-lavender:hover {
+  background: #e9d5ff;
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0px var(--black);
+}
+
+.btn--cute-yellow {
+  background: var(--yellow);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 4px 4px 0px var(--black);
+  border-radius: 20px;
+}
+
+.btn--cute-yellow:hover {
+  background: #fde047;
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0px var(--black);
 }
 
 .btn--ghost {
   background: transparent;
   box-shadow: none;
   border-color: transparent;
+  border-radius: 16px;
 }
 
 .btn--ghost:hover {
-  background: var(--gray-100);
-  box-shadow: none;
-  transform: none;
+  background: var(--pink-soft);
+  border: 2px solid var(--black);
+  box-shadow: 2px 2px 0px var(--black);
+  transform: translateY(-1px);
 }
 
 .btn--ghost:active {
@@ -119,19 +181,22 @@ body {
 }
 
 .btn--lg {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   padding: var(--space-4) var(--space-6);
+  border-radius: 24px;
 }
 
 .btn--sm {
-  font-size: 0.82rem;
-  padding: var(--space-2) var(--space-3);
+  font-size: 0.85rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 14px;
 }
 
 .btn--icon {
   padding: var(--space-3);
   aspect-ratio: 1;
   justify-content: center;
+  border-radius: 50%;
 }
 
 .btn--dashed {
@@ -144,14 +209,36 @@ body {
   border: var(--border);
   box-shadow: var(--shadow);
   padding: var(--space-5);
+  border-radius: 16px;
   transition:
     transform var(--dur-fast) var(--ease-bounce),
     box-shadow var(--dur-fast) ease;
 }
 
 .card:hover {
-  transform: translate(-2px, -2px);
+  transform: translate(-3px, -3px);
   box-shadow: var(--shadow-lg);
+}
+
+.card--cute-pink {
+  background: var(--pink-soft);
+  border: 3px solid var(--black);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px var(--black);
+}
+
+.card--cute-mint {
+  background: var(--mint);
+  border: 3px solid var(--black);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px var(--black);
+}
+
+.card--cute-lavender {
+  background: var(--lavender);
+  border: 3px solid var(--black);
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px var(--black);
 }
 
 .card--flat {

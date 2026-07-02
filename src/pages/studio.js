@@ -799,11 +799,11 @@ function showDownloadModal(project, container) {
         <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3);">
           <input class="input" id="share-author" placeholder="Your Artist Name (e.g. Labony Sur)" style="font-family:var(--font-doodle);font-size:0.9rem;" />
           <select class="input" id="share-method" style="font-family:var(--font-doodle);font-size:0.9rem;">
-            <option value="github">🌸 Method 1: GitHub Archive (CDN & PR Auto-Merge)</option>
-            <option value="ipfs">🪐 Method 2: IPFS P2P Network (Immutable CID)</option>
+            <option value="github">Method 1: GitHub Archive (CDN & PR Auto-Merge)</option>
+            <option value="ipfs">Method 2: IPFS P2P Network (Immutable CID)</option>
           </select>
         </div>
-        <button class="btn btn--primary" id="dl-share" style="font-family:var(--font-doodle);width:100%;">Publish to Community</button>
+        <button class="btn btn--cute-pink" id="dl-share" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.05rem;">Publish to Community</button>
       </div>
     </div>
   `;
