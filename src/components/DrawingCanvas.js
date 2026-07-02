@@ -552,6 +552,7 @@ export function createDrawingCanvas(options = {}) {
     setShowGuides(val) {
       showGuides = !!val;
       drawGuides();
+      render();
     },
 
     setTemplateOverlay(char, style = 'sans', alpha = 0.25) {
@@ -559,6 +560,7 @@ export function createDrawingCanvas(options = {}) {
       templateStyle = style;
       templateOpacity = alpha;
       drawGuides();
+      render();
     },
 
     hasContent() { return strokes.length > 0; },

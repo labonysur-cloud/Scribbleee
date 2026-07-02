@@ -688,6 +688,13 @@ export function renderStudio(container, navigate) {
     switchToChar(list[Math.min(list.length - 1, idx + 1)]);
   });
 
+  function syncCanvasGuide(char) {
+    if (!canvasApi || !toolApi) return;
+    const tState = toolApi.getState();
+    const alpha = tState.templateStyle === 'off' ? 0 : (tState.templateOpacity !== undefined ? tState.templateOpacity / 100 : 0.25);
+    canvasApi.setTemplateOverlay(char, tState.templateStyle || 'sans', alpha);
+  }
+
   function switchToChar(char) {
     // Save current before switching
     if (canvasApi) {
@@ -698,6 +705,7 @@ export function renderStudio(container, navigate) {
     selectedChar = char;
     page.querySelector('#current-char-label').textContent = char;
     ghostLetter.textContent = char;
+    syncCanvasGuide(char);
 
     const existing = project.glyphs[char];
     canvasApi.loadStrokes(existing?.strokes || []);
@@ -714,6 +722,7 @@ export function renderStudio(container, navigate) {
     selectedChar = language === 'bangla' ? 'ক' : 'A';
     page.querySelector('#current-char-label').textContent = selectedChar;
     ghostLetter.textContent = selectedChar;
+    syncCanvasGuide(selectedChar);
     canvasApi.loadStrokes([]);
 
     glyphGridApi = createGlyphGrid({
