@@ -465,7 +465,10 @@ export function renderHome(container, navigate) {
     <div class="footer__logo" style="display:flex; align-items:center; justify-content:center;">
       <img src="/Scribbleee.png" alt="Scribbleee App Logo" style="height:48px; width:auto; object-fit:contain;" />
     </div>
-    <p class="footer__sub">Made with love for creative people everywhere. Draw something wonderful today.</p>
+    <p class="footer__sub" style="font-size:1.05rem; line-height:1.5; max-width:600px; margin: 12px auto 0;">
+      A creative solo independent project made with love by <strong>Labony Sur</strong>.<br />
+      <span style="font-size:0.95rem; opacity:0.85;">Free for personal and creative use (not for commercial use). Draw something wonderful today!</span>
+    </p>
   </footer>
   `;
 
