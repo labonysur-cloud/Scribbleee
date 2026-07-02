@@ -1,14 +1,14 @@
 :root {
   /* ── Palette ──────────────────────────── */
   --black:       #0d0d0d;
-  --white:       #fafafa;
-  --cream:       #f5f0e8;
-  --cream-dark:  #ede7d9;
+  --white:       #ffffff;
+  --cream:       #fff0f5;
+  --cream-dark:  #fce7f3;
   --gray-100:    #f0f0f0;
   --gray-200:    #e0e0e0;
   --gray-300:    #c8c8c8;
   --gray-400:    #9e9e9e;
-  --gray-500:    #6e6e6e;
+  --gray-500:    #555555;
 
   /* ── Whimsical Cute Pastels ───────────── */
   --pink-light:  #fff0f5;

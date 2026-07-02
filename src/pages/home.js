@@ -151,33 +151,45 @@ export function renderHome(container, navigate) {
 
     .feature-card {
       background: var(--white);
-      border: var(--border);
-      box-shadow: var(--shadow);
-      padding: var(--space-5);
+      border: 3px solid var(--black);
+      border-radius: 20px;
+      box-shadow: 5px 5px 0px var(--black);
+      padding: var(--space-6);
       transition: transform 0.2s var(--ease-bounce), box-shadow 0.2s ease;
     }
 
     .feature-card:hover {
-      transform: translate(-3px, -3px);
-      box-shadow: var(--shadow-lg);
+      transform: translate(-4px, -4px) rotate(-1deg);
+      box-shadow: 8px 8px 0px var(--black);
+      background: #fff8fb;
     }
 
     .feature-card__icon {
       font-size: 2.5rem;
       margin-bottom: var(--space-3);
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      background: #fce7f3;
+      border: 2px solid #000;
+      border-radius: 14px;
+      box-shadow: 2px 2px 0px #000;
+      color: #ff1493;
     }
 
     .feature-card__title {
       font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 400;
+      font-size: 1.6rem;
+      font-weight: 700;
       margin-bottom: var(--space-2);
+      color: var(--black);
     }
 
     .feature-card__desc {
       font-family: var(--font-doodle);
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--gray-500);
       line-height: 1.5;
     }
@@ -203,17 +215,19 @@ export function renderHome(container, navigate) {
 
     .template-card {
       background: var(--white);
-      border: var(--border);
-      box-shadow: var(--shadow-sm);
-      padding: var(--space-4);
+      border: 3px solid var(--black);
+      border-radius: 18px;
+      box-shadow: 4px 4px 0px var(--black);
+      padding: var(--space-5) var(--space-4);
       text-align: center;
       cursor: pointer;
       transition: transform 0.2s var(--ease-bounce), box-shadow 0.2s ease;
     }
 
     .template-card:hover {
-      transform: translate(-2px, -2px) rotate(-1deg);
-      box-shadow: var(--shadow);
+      transform: translate(-3px, -3px) rotate(1deg);
+      box-shadow: 6px 6px 0px var(--black);
+      background: #fef08a;
     }
 
     .template-card__chars {
@@ -222,26 +236,27 @@ export function renderHome(container, navigate) {
       font-style: italic;
       margin-bottom: var(--space-2);
       letter-spacing: -0.02em;
+      color: #ff1493;
     }
 
     .template-card__name {
       font-family: var(--font-doodle);
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
       margin-bottom: var(--space-1);
     }
 
     .template-card__desc {
-      font-family: var(--font-body);
-      font-size: 0.75rem;
-      color: var(--gray-400);
+      font-family: var(--font-doodle);
+      font-size: 0.9rem;
+      color: var(--gray-500);
     }
 
     /* ── Stats bar ──────────────────────────── */
     .stats-bar {
-      background: var(--cream-dark);
-      border-top: var(--border);
-      border-bottom: var(--border);
+      background: #fff0f5;
+      border-top: 4px solid #000;
+      border-bottom: 4px solid #000;
       padding: var(--space-6) var(--space-6);
       display: flex;
       justify-content: center;
@@ -377,27 +392,27 @@ export function renderHome(container, navigate) {
         <p class="feature-card__desc">Sketch every letter freehand on a guided canvas with baseline, x-height, and cap-height helpers. Just like a real type designer.</p>
       </div>
       <div class="feature-card anim-scale-in">
-        <span class="feature-card__icon">&#128196;</span>
+        <span class="feature-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2ZM18 20H6V4H13V9H18V20Z"/></svg></span>
         <h2 class="feature-card__title">Generate Real Fonts</h2>
         <p class="feature-card__desc">Download actual TTF, OTF, and WOFF2 files. Install them on your computer and use them in any app — Photoshop, Canva, Word, everywhere.</p>
       </div>
       <div class="feature-card anim-scale-in">
-        <span class="feature-card__icon">&#128247;</span>
+        <span class="feature-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7C17 6.45 16.55 6 16 6H4C3.45 6 3 6.45 3 7V17C3 17.55 3.45 18 4 18H16C16.55 18 17 17.55 17 17V13.5L21 17.5V6.5L17 10.5Z"/></svg></span>
         <h2 class="feature-card__title">Instagram Export</h2>
         <p class="feature-card__desc">Animate your font text with wave, bounce, and typewriter effects. Export as a 1080×1920 Stories-ready video in one click.</p>
       </div>
       <div class="feature-card anim-scale-in">
-        <span class="feature-card__icon" style="font-family:var(--font-doodle);">বর্ণ</span>
+        <span class="feature-card__icon" style="font-family:var(--font-doodle);font-size:1.8rem;">বর্ণ</span>
         <h2 class="feature-card__title">English + Bangla</h2>
         <p class="feature-card__desc">Full English character set plus Bangla consonants, vowels, and numerals. Create fonts for both languages in one project.</p>
       </div>
       <div class="feature-card anim-scale-in">
-        <span class="feature-card__icon">&#128204;</span>
+        <span class="feature-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12.88 15.76V14.3H11.1V15.76H12.88ZM12 6C10.07 6 8.5 7.57 8.5 9.5H10.1C10.1 8.45 10.95 7.6 12 7.6C13.05 7.6 13.9 8.45 13.9 9.5C13.9 10.55 13.05 11.4 12 11.4V13.3H13.8V11.83C15.01 11.19 15.8 9.94 15.8 8.5C15.8 7.12 14.68 6 13.3 6H12Z"/></svg></span>
         <h2 class="feature-card__title">Template Library</h2>
         <p class="feature-card__desc">6 pre-made letter style templates — Bubbly, Sketchy, Dainty, Bold Block, Cute Serif, and Wavy — to jump-start your creativity.</p>
       </div>
       <div class="feature-card anim-scale-in">
-        <span class="feature-card__icon">&#127760;</span>
+        <span class="feature-card__icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.05 19.44 4 16.08 4 12C4 11.38 4.08 10.79 4.21 10.21L9 15V16C9 17.1 9.9 18 11 18V19.93ZM17.9 17.39C17.64 16.58 16.9 16 16 16H15V13C15 12.45 14.55 12 14 12H8V10H10C10.55 10 11 9.55 11 9V7H13C14.1 7 15 6.1 15 5V4.59C17.93 5.78 20 8.65 20 12C20 14.08 19.2 15.97 17.9 17.39Z"/></svg></span>
         <h2 class="feature-card__title">Share With Everyone</h2>
         <p class="feature-card__desc">Publish your font to the community library. Anyone can find it and download it — no login, no friction, pure sharing joy.</p>
       </div>
@@ -405,7 +420,7 @@ export function renderHome(container, navigate) {
   </section>
 
   <!-- Template previews -->
-  <div style="background:var(--cream-dark);border-top:var(--border);border-bottom:var(--border);padding:var(--space-10) 0;">
+  <div style="background:#fff0f5;border-top:4px solid #000;border-bottom:4px solid #000;padding:var(--space-10) 0;">
     <section class="templates-section" style="border:none;padding-top:0;padding-bottom:0;">
       <div class="templates-title">
         <span class="label">template styles</span>
