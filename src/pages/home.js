@@ -315,32 +315,46 @@ export function renderHome(container, navigate) {
   </style>
 
   <!-- Hero -->
-  <section class="hero">
-    <span class="hero__deco-star" style="top:20px;left:80px;animation-delay:0s">★</span>
-    <span class="hero__deco-star" style="top:60px;right:100px;animation-delay:0.6s;font-size:1.4rem">✦</span>
-    <span class="hero__deco-star" style="bottom:40px;left:160px;animation-delay:1.2s;font-size:1.6rem">◆</span>
-    <span class="hero__deco-star" style="bottom:80px;right:80px;animation-delay:0.4s">○</span>
+  <section class="hero" style="background:#FFF0F5; border-bottom: 4px solid #000; padding: var(--space-12) var(--space-4) var(--space-10);">
+    <div style="max-width: 920px; margin: 0 auto; position: relative;">
+      <!-- Background floating princess decorations -->
+      <span class="hero__deco-star" style="top:10px;left:30px;color:#ff69b4;font-size:2.2rem;">♡</span>
+      <span class="hero__deco-star" style="top:30px;right:40px;font-size:2rem;">🎀</span>
+      <span class="hero__deco-star" style="bottom:20px;left:60px;font-size:1.8rem;">⭐️</span>
+      <span class="hero__deco-star" style="bottom:50px;right:30px;color:#ff1493;font-size:2.4rem;">✦</span>
 
-    <p class="hero__eyebrow">draw it. build it. share it</p>
+      <!-- Prominent centered Neo-Brutalist Banner -->
+      <div style="background: #ffffff; border: 4px solid #000; box-shadow: 6px 6px 0px #000; padding: var(--space-8) var(--space-6); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 2;">
+        
+        <div style="display:inline-flex; align-items:center; gap:8px; background:#fce7f3; border:2px solid #000; box-shadow:2px 2px 0px #000; padding: 4px 14px; margin-bottom: var(--space-5);">
+          <span style="font-family:var(--font-doodle); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; color:#000;">👑 Princess Brutalism Foundry</span>
+          <span>⭐️</span>
+        </div>
 
-    <h1 class="hero__title">
-      <span class="word-scribble">Scribble</span>
-      <span class="word-eee">eee</span>
-    </h1>
+        <!-- 12 FPS Stop-Motion Flipbook Logo Text -->
+        <h1 class="hero__title stopmotion-logo" id="hero-stopmotion-logo" style="margin-bottom:var(--space-4); display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:4px; font-size:clamp(2.8rem, 7vw, 5.8rem); line-height:1.1;">
+          <!-- Populated dynamically / animated at 12 FPS -->
+        </h1>
 
-    <p class="hero__sub">
-      The most adorable font creation studio on the planet.
-      Draw custom English and Bangla fonts, generate real font files,
-      and export Instagram-ready animations. No login ever.
-    </p>
+        <p class="hero__sub" style="margin-bottom:var(--space-6); max-width:600px;">
+          The most adorable font creation studio on the planet.
+          Draw custom English and Bangla fonts, generate real font files,
+          and export Instagram-ready animations. No login ever.
+        </p>
 
-    <div class="hero__ctas">
-      <button class="btn btn--primary btn--lg" id="home-cta-draw" style="font-family:var(--font-doodle);font-size:1.2rem;">
-        Start Drawing
-      </button>
-      <button class="btn btn--lg" id="home-cta-library" style="font-family:var(--font-doodle);font-size:1.2rem;">
-        Explore Fonts
-      </button>
+        <div class="hero__ctas">
+          <button class="btn btn--primary btn--lg" id="home-cta-draw" style="font-family:var(--font-doodle);font-size:1.2rem; box-shadow: 4px 4px 0px #000;">
+            Start Drawing
+          </button>
+          <button class="btn btn--lg" id="home-cta-library" style="font-family:var(--font-doodle);font-size:1.2rem; box-shadow: 4px 4px 0px #000;">
+            Explore Fonts
+          </button>
+        </div>
+
+        <div style="margin-top:var(--space-5); font-family:var(--font-doodle); font-size:0.78rem; background:#000; color:#ffb6c1; padding: 5px 14px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; box-shadow:3px 3px 0px #ff69b4;">
+          12 FPS Pure-Code Stop-Motion Flipbook Loop • Zero Video Assets
+        </div>
+      </div>
     </div>
   </section>
 
@@ -477,6 +491,56 @@ export function renderHome(container, navigate) {
 
   // Stats counter
   loadStats(page);
+
+  // ── 12 FPS Stop-Motion Flipbook Logo Engine ──
+  const logoEl = page.querySelector('#hero-stopmotion-logo');
+  if (logoEl) {
+    const letters = [
+      { char: 'S', stagger: 0 },
+      { char: 'c', stagger: 2 },
+      { char: 'r', stagger: 4 },
+      { char: 'i', stagger: 1 },
+      { char: 'b', stagger: 3 },
+      { char: 'b', stagger: 0 },
+      { char: 'l', stagger: 2 },
+      { char: 'e', stagger: 4 },
+      { char: 'e', stagger: 1 },
+      { char: 'e', stagger: 3 },
+    ];
+    let currentFrame = 0;
+
+    function getVariantHTML(char, vIdx) {
+      switch (vIdx) {
+        case 0: // Base/Brutalist: Ultra-thick solid black
+          return `<span style="font-family:var(--font-display); font-weight:900; color:#000; display:inline-block;">${char}</span>`;
+        case 1: // Princess Aesthetic: Pink hearts ♡, bows 🎀, stars ⭐️
+          if (char === 'i') return `<span style="display:inline-flex; flex-direction:column; align-items:center; line-height:1;"><span style="color:#ec4899; font-size:0.45em;">♡</span><span style="font-family:var(--font-display); font-weight:900; color:#000;">ı</span></span>`;
+          if (char === 'e') return `<span style="position:relative; display:inline-block; font-family:var(--font-display); font-weight:900; color:#000;">${char}<span style="position:absolute; top:-12px; right:-8px; font-size:0.35em;">🎀</span></span>`;
+          if (char === 'S') return `<span style="position:relative; display:inline-block; font-family:var(--font-display); font-weight:900; color:#000;">${char}<span style="position:absolute; top:-12px; left:-8px; font-size:0.35em;">👑</span></span>`;
+          return `<span style="position:relative; display:inline-block; font-family:var(--font-display); font-weight:900; color:#ec4899; text-shadow:3px 3px 0px #000;">${char}<span style="position:absolute; bottom:-6px; right:-4px; font-size:0.3em;">✨</span></span>`;
+        case 2: // Wobbly Scribble: Shaky distorted outline
+          return `<span style="display:inline-block; font-family:var(--font-doodle); font-weight:900; color:transparent; -webkit-text-stroke:3px #000; transform:rotate(-3deg) skewX(6deg) scale(1.05); filter:drop-shadow(2px 3px 0px #ff69b4);">${char}</span>`;
+        case 3: // Dotted / Textured: Broken down dotted strokes
+          return `<span style="display:inline-block; font-family:var(--font-display); font-weight:900; color:transparent; -webkit-text-stroke:2.5px #000; background-image:radial-gradient(#ff1493 35%, transparent 36%); background-size:6px 6px; -webkit-background-clip:text; transform:rotate(2deg);">${char}</span>`;
+        case 4: // Retro Pixel / Block: Stepped blocky layout
+          return `<span style="display:inline-block; font-family:monospace; font-weight:700; text-transform:uppercase; background:#000; color:#fff; padding:0 4px; box-shadow:3px 3px 0px #ff69b4; transform:scale(0.92);">${char}</span>`;
+        default:
+          return `<span>${char}</span>`;
+      }
+    }
+
+    function renderStopMotion() {
+      if (!logoEl.isConnected) return;
+      logoEl.innerHTML = letters.map((item) => {
+        const activeV = (currentFrame + item.stagger) % 5;
+        return `<span style="display:inline-flex; align-items:center; justify-content:center; min-width:0.85em; height:1.2em;">${getVariantHTML(item.char, activeV)}</span>`;
+      }).join('');
+      currentFrame = (currentFrame + 1) % 5;
+    }
+
+    renderStopMotion();
+    const intervalId = setInterval(renderStopMotion, 83); // ~12 FPS
+  }
 
   container.appendChild(page);
 }
