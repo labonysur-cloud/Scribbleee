@@ -8,6 +8,10 @@ import { renderStudio }  from './pages/studio.js';
 import { renderLibrary } from './pages/library.js';
 import { renderPreview } from './pages/preview.js';
 import { showToast }     from './components/Toast.js';
+import { inject }        from '@vercel/analytics';
+
+// Initialize Vercel Analytics tracking for page views & visitors
+inject();
 
 // ── Router ──────────────────────────────────
 const ROUTES = {
