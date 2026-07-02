@@ -74,6 +74,7 @@ export function renderStudio(container, navigate) {
 
   // ── Editor area ──────────────────────────
   const editor = document.createElement('div');
+  editor.className = 'studio-editor';
   editor.style.cssText = `display:flex;flex:1;overflow:hidden;`;
 
   let exitStampModeUI = () => {};
@@ -100,6 +101,7 @@ export function renderStudio(container, navigate) {
 
   // Center : canvas + controls
   const centerCol = document.createElement('div');
+  centerCol.className = 'studio-center-col';
   centerCol.style.cssText = `
     flex:1;
     display:flex;
@@ -348,6 +350,7 @@ export function renderStudio(container, navigate) {
 
   // ── Right panel — Tabbed (Glyphs | Templates) ──
   const rightPanel = document.createElement('div');
+  rightPanel.className = 'studio-right-panel';
   rightPanel.style.cssText = `
     width:285px;
     flex-shrink:0;

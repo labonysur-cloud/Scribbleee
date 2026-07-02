@@ -24,7 +24,10 @@ const SECTIONS_BN = [
 ];
 
 export function createGlyphGrid(options = {}) {
-  const { language = 'english', glyphs = {}, onSelect, selectedChar = 'A' } = options;
+  let language = options.language || 'english';
+  let glyphs = options.glyphs || {};
+  let selectedChar = options.selectedChar !== undefined ? options.selectedChar : 'A';
+  const onSelect = options.onSelect;
 
   const sections = language === 'bangla' ? SECTIONS_BN : SECTIONS_EN;
 
@@ -141,11 +144,8 @@ export function createGlyphGrid(options = {}) {
   return {
     element: panel,
     refresh(newGlyphs, newSelected) {
-      Object.assign(options, { glyphs: newGlyphs, selectedChar: newSelected });
-      glyphs.__proto__ = newGlyphs.__proto__;
-      Object.keys(glyphs).forEach(k => delete glyphs[k]);
-      Object.assign(glyphs, newGlyphs);
-      if (newSelected !== undefined) options.selectedChar = newSelected;
+      if (newGlyphs) glyphs = newGlyphs;
+      if (newSelected !== undefined) selectedChar = newSelected;
       render();
     },
   };

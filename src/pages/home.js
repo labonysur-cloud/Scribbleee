@@ -342,10 +342,9 @@ export function renderHome(container, navigate) {
         ✨ A Creative Solo Project Made with Love by <span style="color:#ff1493; text-decoration:underline;">Labony Sur</span> ✨
       </div>
 
-      <!-- Prominent centered Neo-Brutalist White Box with ONLY the animation inside -->
-      <div style="background: #ffffff; border: 4px solid #000; box-shadow: 8px 8px 0px #000; border-radius: 28px; padding: var(--space-12) var(--space-6); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
-        <!-- Slowed-down Stop-Motion Flipbook Logo Text ONLY -->
-        <h1 class="hero__title stopmotion-logo" id="hero-stopmotion-logo" style="margin:0; display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px; font-size:clamp(3.2rem, 8vw, 6.5rem); line-height:1.1;">
+      <!-- Stop-Motion Flipbook Logo Text on ONE single line with NO white background -->
+      <div style="padding: var(--space-4) 0 var(--space-8); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2; width: 100%;">
+        <h1 class="hero__title stopmotion-logo" id="hero-stopmotion-logo" style="margin:0; display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:clamp(1px, 1.2vw, 8px); font-size:clamp(1.8rem, 6.8vw, 5.5rem); line-height:1.1; white-space:nowrap;">
           <!-- Populated dynamically / animated at ~5.5 FPS -->
         </h1>
       </div>

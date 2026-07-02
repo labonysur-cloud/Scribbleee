@@ -10,15 +10,15 @@ export function createNav(navigate, activeRoute) {
 
   nav.innerHTML = `
     <div class="nav__logo" style="cursor:pointer; display:flex; align-items:center;" id="nav-logo-box" onclick="window.scribbleee && window.scribbleee.navigate('')">
-      <img src="/Scribbleee.png" alt="Scribbleee App Logo" style="height:52px; width:auto; object-fit:contain; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
+      <img src="/Scribbleee.png" alt="Scribbleee App Logo" style="height:clamp(36px, 6vw, 48px); width:auto; object-fit:contain; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'" />
     </div>
-    <div class="nav__links" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;">
-      <button class="btn btn--ghost nav-link ${isHome ? 'nav-link--active' : ''}" id="nav-home" onclick="window.scribbleee && window.scribbleee.navigate('')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isHome ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Home</button>
-      <button class="btn btn--ghost nav-link ${isStudio ? 'nav-link--active' : ''}" id="nav-studio" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isStudio ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Draw & Studio</button>
-      <button class="btn btn--ghost nav-link ${isLibrary ? 'nav-link--active' : ''}" id="nav-library" onclick="window.scribbleee && window.scribbleee.navigate('library')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isLibrary ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Community Library</button>
-      <button class="btn btn--cute-pink" id="nav-cta" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; padding: 6px 18px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
-        Create Cute Font
+    <div class="nav__links" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center;">
+      <button class="btn btn--ghost nav-link ${isHome ? 'nav-link--active' : ''}" id="nav-home" onclick="window.scribbleee && window.scribbleee.navigate('')" style="font-family:var(--font-doodle); font-size:1.05rem; font-weight:700; padding:6px 12px; ${isHome ? 'background:#fce7f3; border:2px solid #000; box-shadow:2px 2px 0 #000;' : ''}">Home</button>
+      <button class="btn btn--ghost nav-link ${isStudio ? 'nav-link--active' : ''}" id="nav-studio" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.05rem; font-weight:700; padding:6px 12px; ${isStudio ? 'background:#fce7f3; border:2px solid #000; box-shadow:2px 2px 0 #000;' : ''}">Studio</button>
+      <button class="btn btn--ghost nav-link ${isLibrary ? 'nav-link--active' : ''}" id="nav-library" onclick="window.scribbleee && window.scribbleee.navigate('library')" style="font-family:var(--font-doodle); font-size:1.05rem; font-weight:700; padding:6px 12px; ${isLibrary ? 'background:#fce7f3; border:2px solid #000; box-shadow:2px 2px 0 #000;' : ''}">Library</button>
+      <button class="btn btn--cute-pink" id="nav-cta" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.05rem; font-weight:800; display:inline-flex; align-items:center; gap:4px; padding:6px 14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        + Create
       </button>
     </div>
   `;

@@ -457,31 +457,60 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--black); }
 
 /* ── MOBILE RESPONSIVENESS (PHONES & TABLETS) ── */
+@media (max-width: 900px) {
+  .studio-editor {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
+  .tool-panel {
+    width: 100% !important;
+    max-height: none !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    border-right: none !important;
+    border-bottom: var(--border) !important;
+    padding: var(--space-2) !important;
+    gap: var(--space-2) !important;
+  }
+  .studio-center-col {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: var(--border) !important;
+    padding: var(--space-3) !important;
+  }
+  .studio-right-panel {
+    width: 100% !important;
+    height: 380px !important;
+  }
+  .glyph-grid-panel {
+    width: 100% !important;
+  }
+}
+
 @media (max-width: 768px) {
   .nav {
-    padding: 10px 14px !important;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .nav__links {
-    width: 100%;
-    justify-content: center;
+    padding: 8px 12px !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
     gap: 8px !important;
   }
 
+  .nav__links {
+    width: auto !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+
   .nav-link, #nav-cta {
-    font-size: 1rem !important;
-    padding: 6px 12px !important;
+    font-size: 0.95rem !important;
+    padding: 5px 10px !important;
   }
 
   .hero {
-    padding: var(--space-8) var(--space-4) !important;
-  }
-
-  .hero__title {
-    font-size: clamp(2.8rem, 12vw, 4.5rem) !important;
+    padding: var(--space-6) var(--space-3) !important;
   }
 
   .features__grid, .templates-grid, .zero-db-grid {
@@ -489,26 +518,29 @@ body {
   }
 
   .stats-bar {
-    gap: var(--space-6) !important;
-    padding: var(--space-6) var(--space-4) !important;
+    gap: var(--space-4) !important;
+    padding: var(--space-4) var(--space-3) !important;
   }
 
   .library-header {
     flex-direction: column;
     align-items: flex-start !important;
-    gap: 16px;
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
-  .nav__links {
-    flex-direction: column;
-    align-items: stretch;
+  .nav {
+    justify-content: center !important;
   }
-
+  .nav__links {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
   .nav__links .btn {
-    width: 100%;
+    width: auto !important;
     text-align: center;
-    justify-content: center;
   }
 }
