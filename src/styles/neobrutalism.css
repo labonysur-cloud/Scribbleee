@@ -1,0 +1,370 @@
+/* ═══════════════════════════════════════════
+   NEOBRUTALISM COMPONENT STYLES — Scribbleee
+   ═══════════════════════════════════════════ */
+
+/* ── BASE ─────────────────────────────────── */
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--black);
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  animation: pageFadeIn var(--dur-slow) var(--ease-out);
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── NAV ──────────────────────────────────── */
+.nav {
+  background: var(--white);
+  border-bottom: var(--border);
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-overlay);
+}
+
+.nav__logo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nav__logo .logo-squiggle {
+  font-family: var(--font-doodle);
+  font-size: 1.4rem;
+  color: var(--gray-500);
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── BUTTONS ──────────────────────────────── */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: var(--space-3) var(--space-5);
+  border: var(--border);
+  background: var(--white);
+  color: var(--black);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-bounce),
+    box-shadow var(--dur-fast) ease;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  position: relative;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary {
+  background: var(--black);
+  color: var(--white);
+}
+
+.btn--primary:hover {
+  background: var(--black);
+}
+
+.btn--ghost {
+  background: transparent;
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.btn--ghost:hover {
+  background: var(--gray-100);
+  box-shadow: none;
+  transform: none;
+}
+
+.btn--ghost:active {
+  transform: none;
+  box-shadow: none;
+}
+
+.btn--lg {
+  font-size: 1.1rem;
+  padding: var(--space-4) var(--space-6);
+}
+
+.btn--sm {
+  font-size: 0.82rem;
+  padding: var(--space-2) var(--space-3);
+}
+
+.btn--icon {
+  padding: var(--space-3);
+  aspect-ratio: 1;
+  justify-content: center;
+}
+
+.btn--dashed {
+  border-style: dashed;
+}
+
+/* ── CARDS ────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  padding: var(--space-5);
+  transition:
+    transform var(--dur-fast) var(--ease-bounce),
+    box-shadow var(--dur-fast) ease;
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card--flat {
+  box-shadow: none;
+}
+
+.card--flat:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── TAGS & BADGES ────────────────────────── */
+.tag {
+  font-family: var(--font-doodle);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-sm);
+  background: var(--cream);
+  display: inline-block;
+  letter-spacing: 0.02em;
+}
+
+.tag--filled {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* ── INPUTS ───────────────────────────────── */
+.input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: var(--space-3) var(--space-4);
+  border: var(--border);
+  background: var(--white);
+  color: var(--black);
+  outline: none;
+  transition: box-shadow var(--dur-fast) ease;
+  width: 100%;
+}
+
+.input:focus {
+  box-shadow: var(--shadow);
+}
+
+.input::placeholder {
+  color: var(--gray-400);
+  font-family: var(--font-doodle);
+}
+
+/* ── SLIDERS ──────────────────────────────── */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--gray-200);
+  border: var(--border-sm);
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--black);
+  border: var(--border-sm);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-bounce);
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* ── DIVIDERS ─────────────────────────────── */
+.divider {
+  border: none;
+  border-top: var(--border-sm);
+  border-style: dashed;
+  margin: var(--space-5) 0;
+}
+
+/* ── SECTION TITLES ───────────────────────── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.section-title em {
+  font-style: italic;
+}
+
+.label {
+  font-family: var(--font-doodle);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+  display: block;
+}
+
+/* ── DECORATIVE ───────────────────────────── */
+.doodle-border {
+  border: var(--border);
+  border-style: dashed;
+}
+
+.star-bullet::before {
+  content: '★';
+  margin-right: var(--space-2);
+  font-size: 0.8em;
+}
+
+.squiggle-line {
+  width: 100%;
+  height: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='6'%3E%3Cpath d='M0 3 Q5 0 10 3 Q15 6 20 3' fill='none' stroke='%230d0d0d' stroke-width='2'/%3E%3C/svg%3E") repeat-x center;
+  margin: var(--space-4) 0;
+}
+
+/* ── TOOLTIP ──────────────────────────────── */
+.tooltip {
+  position: relative;
+}
+
+.tooltip::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) scale(0);
+  background: var(--black);
+  color: var(--white);
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: transform var(--dur-fast) var(--ease-bounce);
+  transform-origin: bottom center;
+}
+
+.tooltip:hover::after {
+  transform: translateX(-50%) scale(1);
+}
+
+/* ── MODAL ────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.5);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn var(--dur-med) ease;
+}
+
+.modal {
+  background: var(--white);
+  border: var(--border-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-6);
+  max-width: 520px;
+  width: 90%;
+  animation: modalSlideIn var(--dur-slow) var(--ease-bounce);
+}
+
+@keyframes modalSlideIn {
+  from { transform: translateY(40px) scale(0.9); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── TOAST ────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-5);
+  right: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  z-index: var(--z-toast);
+}
+
+.toast {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-doodle);
+  font-size: 1rem;
+  padding: var(--space-3) var(--space-5);
+  border: var(--border);
+  box-shadow: var(--shadow);
+  animation: toastIn var(--dur-slow) var(--ease-bounce);
+}
+
+@keyframes toastIn {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* ── SCROLLBAR ────────────────────────────── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--black); }

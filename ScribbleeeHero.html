@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scribbleee — Draw Your Own Fonts</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; }
+    @keyframes sparkle {
+      0%,100% { opacity:1; transform:translateX(-50%) scale(1) rotate(0deg); }
+      33%      { opacity:.5; transform:translateX(-50%) scale(1.6) rotate(22deg); }
+      66%      { opacity:.8; transform:translateX(-50%) scale(.75) rotate(-16deg); }
+    }
+    @keyframes bgFloat {
+      0%,100% { transform:translateY(0) rotate(0deg); }
+      40%      { transform:translateY(-13px) rotate(10deg); }
+      70%      { transform:translateY(-7px) rotate(-6deg); }
+    }
+    .hero-panel {
+      background: #FFF0F5;
+      border: 4px solid #000;
+      box-shadow: 8px 8px 0 #000;
+      position: relative;
+    }
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      top: -4px; left: -4px; right: -4px;
+      height: 7px;
+      background: repeating-linear-gradient(90deg, #e91e8c 0, #e91e8c 10px, #000 10px, #000 15px, transparent 15px, transparent 25px);
+      z-index: 2;
+    }
+    .btn-ink {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .88rem;
+      padding: .65rem 1.5rem; background: #000; color: #FFF0F5;
+      border: 3px solid #000; box-shadow: 4px 4px 0 #e91e8c;
+      cursor: pointer; letter-spacing: .06em; text-transform: uppercase;
+      transition: transform 55ms, box-shadow 55ms;
+      display: inline-flex; align-items: center; gap: .4rem;
+    }
+    .btn-ink:hover  { transform:translate(-2px,-2px); box-shadow:6px 6px 0 #e91e8c; }
+    .btn-ink:active { transform:translate(2px,2px);   box-shadow:2px 2px 0 #e91e8c; }
+    .btn-ghost {
+      font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: .88rem;
+      padding: .65rem 1.5rem; background: #FFF0F5; color: #000;
+      border: 3px solid #000; box-shadow: 4px 4px 0 #000;
+      cursor: pointer; letter-spacing: .06em; text-transform: uppercase;
+      transition: transform 55ms, box-shadow 55ms;
+      display: inline-flex; align-items: center; gap: .4rem;
+    }
+    .btn-ghost:hover  { transform:translate(-2px,-2px); box-shadow:6px 6px 0 #000; }
+    .btn-ghost:active { transform:translate(2px,2px);   box-shadow:2px 2px 0 #000; }
+    .letter-cell {
+      position: relative; display: inline-block;
+      padding-top: 26px; vertical-align: bottom;
+    }
+  </style>
+</head>
+<body style="background:linear-gradient(135deg,#ffd6ee 0%,#f0d6ff 55%,#ffd6ee 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const FilterBank = () => (
+      <svg xmlns="http://www.w3.org/2000/svg"
+        style={{ position:'absolute', width:0, height:0, overflow:'hidden' }}
+        aria-hidden="true"
+      >
+        <defs>
+          {[[2,'0.030 0.090',9],[7,'0.020 0.110',8],[13,'0.040 0.080',11],[19,'0.025 0.100',7],[23,'0.035 0.095',10]].map(([seed,freq,scale],i) => (
+            <filter key={i} id={"wob"+i} x="-25%" y="-25%" width="150%" height="150%">
+              <feTurbulence type="fractalNoise" baseFrequency={freq} numOctaves="3" seed={seed} result="n"/>
+              <feDisplacementMap in="SourceGraphic" in2="n" scale={scale} xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+          ))}
+        </defs>
+      </svg>
+    );
+
+    const LETTERS = [
+      { ch:'S', dec:null,  dc:'#c2185b' },
+      { ch:'c', dec:'♡',  dc:'#e91e8c' },
+      { ch:'r', dec:null,  dc:'#d63384' },
+      { ch:'i', dec:'♡',  dc:'#e91e8c' },
+      { ch:'b', dec:'✦',  dc:'#c2185b' },
+      { ch:'b', dec:null,  dc:'#d63384' },
+      { ch:'l', dec:'✿',  dc:'#e91e8c' },
+      { ch:'e', dec:'✦',  dc:'#d63384' },
+      { ch:'e', dec:'⭐', dc:'#c2185b' },
+      { ch:'e', dec:'♡',  dc:'#e91e8c' },
+    ];
+
+    const STAGGER = [0, 3, 1, 4, 2, 0, 4, 1, 3, 2];
+    const SKEW = [
+      'skew(3deg,1.5deg)','skew(-2.5deg,2deg)','skew(4deg,-1deg)',
+      'skew(-3deg,2.5deg)','skew(2deg,-3deg)','skew(-4deg,1.5deg)',
+      'skew(1.5deg,3deg)','skew(-2deg,-2.5deg)','skew(3deg,2deg)','skew(-1.5deg,-3deg)',
+    ];
+    const FS = 'clamp(2.3rem, 5.4vw, 4.5rem)';
+    const PX_SHADOW = ['3px 0 0 #000','-3px 0 0 #000','0 3px 0 #000','0 -3px 0 #000','3px 3px 0 #000','-3px -3px 0 #000','3px -3px 0 #000','-3px 3px 0 #000','5px 0 0 #000','-5px 0 0 #000','0 5px 0 #000','0 -5px 0 #000','5px 5px 0 #000','-5px -5px 0 #000'].join(',');
+
+    function LetterGlyph({ letter, variant, index, frame }) {
+      const { ch, dec, dc } = letter;
+      switch (variant) {
+        case 0:
+          return (
+            <span style={{fontFamily:"'Space Grotesk','Arial Black',Impact,sans-serif",fontSize:FS,fontWeight:900,color:'#0a0a0a',lineHeight:1,display:'inline-block',letterSpacing:'-0.03em',textShadow:'3px 3px 0 #0a0a0a',WebkitTextStroke:'1.5px #0a0a0a'}}>
+              {ch}
+            </span>
+          );
+        case 1:
+          return (
+            <span style={{position:'relative',display:'inline-block',lineHeight:1}}>
+              <span style={{fontFamily:"'Caveat',cursive",fontSize:"calc("+FS+" * 1.12)",fontWeight:800,color:dc,fontStyle:'italic',lineHeight:1,display:'inline-block',textShadow:"2px 2px 0 #ffb6c1, 0 0 20px "+dc+"55",WebkitTextStroke:"1px "+dc}}>
+                {ch}
+              </span>
+              {dec && (
+                <span style={{position:'absolute',top:'-22px',left:'50%',fontSize:'15px',color:'#ff69b4',lineHeight:1,animation:'sparkle 360ms ease-in-out infinite',pointerEvents:'none',display:'block',textAlign:'center',whiteSpace:'nowrap'}}>
+                  {dec}
+                </span>
+              )}
+            </span>
+          );
+        case 2:
+          return (
+            <span style={{fontFamily:"'Space Grotesk',sans-serif",fontSize:FS,fontWeight:900,color:'#05050f',lineHeight:1,display:'inline-block',filter:"url(#wob"+frame+")",transform:SKEW[index],WebkitTextStroke:'2px #05050f',transformOrigin:'bottom center'}}>
+              {ch}
+            </span>
+          );
+        case 3:
+          return (
+            <span style={{fontFamily:"'Space Grotesk','Arial Black',sans-serif",fontSize:FS,fontWeight:900,lineHeight:1,display:'inline-block',letterSpacing:'-0.02em',background:'radial-gradient(circle, #0a0a0a 2.8px, transparent 2.8px) 0 0 / 8px 8px',WebkitBackgroundClip:'text',backgroundClip:'text',WebkitTextFillColor:'transparent',color:'transparent'}}>
+              {ch}
+            </span>
+          );
+        case 4:
+          return (
+            <span style={{fontFamily:"'Courier New','Lucida Console',monospace",fontSize:"calc("+FS+" * 0.86)",fontWeight:900,color:'#000',lineHeight:1,display:'inline-block',letterSpacing:'0.05em',textShadow:PX_SHADOW,imageRendering:'pixelated'}}>
+              {ch}
+            </span>
+          );
+        default:
+          return <span style={{fontSize:FS}}>{ch}</span>;
+      }
+    }
+
+    const BG_DECS = [
+      {s:'♡',t:9, l:6, sz:22,a:.14,d:0},  {s:'✦',t:16,l:91,sz:17,a:.11,d:.5},
+      {s:'★',t:78,l:5, sz:25,a:.10,d:.9},  {s:'◆',t:84,l:93,sz:15,a:.13,d:1.3},
+      {s:'♡',t:46,l:96,sz:19,a:.10,d:.7},  {s:'✿',t:60,l:3, sz:23,a:.12,d:1.1},
+      {s:'⭐',t:5, l:53,sz:18,a:.10,d:.3},  {s:'✦',t:91,l:50,sz:14,a:.12,d:1.6},
+      {s:'★',t:33,l:95,sz:20,a:.09,d:.2},  {s:'♡',t:57,l:8, sz:16,a:.11,d:1.9},
+      {s:'◆',t:25,l:2, sz:13,a:.09,d:1.4}, {s:'⭐',t:70,l:88,sz:20,a:.10,d:.8},
+    ];
+
+    const ScribbleeeHero = () => {
+      const [frame, setFrame] = useState(0);
+      useEffect(() => {
+        const id = setInterval(() => setFrame(f => (f + 1) % 5), 85);
+        return () => clearInterval(id);
+      }, []);
+
+      return (
+        <>
+          <FilterBank />
+          {BG_DECS.map((d, i) => (
+            <span key={i} aria-hidden="true" style={{position:'fixed',top:d.t+'%',left:d.l+'%',fontSize:d.sz+'px',color:"rgba(214,51,132,"+d.a+")",animation:"bgFloat "+(2.1+i*0.38)+"s ease-in-out infinite",animationDelay:d.d+"s",pointerEvents:'none',userSelect:'none',zIndex:0}}>
+              {d.s}
+            </span>
+          ))}
+
+          <div className="hero-panel" style={{width:'100%',maxWidth:'960px',padding:'clamp(1.5rem,4vw,2.5rem) clamp(1.5rem,5vw,3.5rem)',textAlign:'center',position:'relative',zIndex:1}}>
+            <div style={{position:'absolute',top:-4,right:-4,width:22,height:22,background:'#000',zIndex:3}}/>
+            <div style={{position:'absolute',bottom:-4,left:-4,width:22,height:22,background:'#000',zIndex:3}}/>
+
+            <div style={{display:'inline-flex',alignItems:'center',gap:'.4rem',marginBottom:'1.25rem',fontFamily:"'Space Grotesk',sans-serif",fontSize:'.72rem',fontWeight:700,letterSpacing:'.18em',textTransform:'uppercase',color:'#e91e8c',border:'2px solid #e91e8c',padding:'.28rem .85rem',background:'#fff'}}>
+              ✦ Font Creation Studio ✦
+            </div>
+
+            <div role="heading" aria-level="1" aria-label="Scribbleee" style={{display:'flex',alignItems:'flex-end',justifyContent:'center',lineHeight:1,paddingTop:'1.4rem',paddingBottom:'.2rem',gap:'2px',flexWrap:'nowrap'}}>
+              {LETTERS.map((letter, i) => {
+                const variant = (frame + STAGGER[i]) % 5;
+                return (
+                  <div key={i} className="letter-cell">
+                    <LetterGlyph letter={letter} variant={variant} index={i} frame={frame} />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{display:'flex',gap:'.35rem',justifyContent:'center',marginTop:'.6rem',marginBottom:'.2rem',flexWrap:'wrap'}}>
+              {['Brutalist','Princess','Wobbly','Dotted','Pixel'].map((v, i) => (
+                <span key={i} style={{fontFamily:"'Space Grotesk',sans-serif",fontSize:'.6rem',fontWeight:700,letterSpacing:'.08em',textTransform:'uppercase',padding:'.1rem .4rem',background:frame===i?'#000':'transparent',color:frame===i?'#FFF0F5':'#aaa',border:"1.5px solid "+(frame===i?'#000':'#ddd'),transition:'background 85ms, color 85ms'}}>
+                  {v}
+                </span>
+              ))}
+            </div>
+
+            <div style={{width:'100%',height:'7px',margin:'.9rem 0',backgroundImage:"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='7'%3E%3Cpath d='M0 3.5 Q5 0 10 3.5 Q15 7 20 3.5' fill='none' stroke='%23e91e8c' stroke-width='2'/%3E%3C/svg%3E\")",backgroundRepeat:'repeat-x',backgroundPosition:'center'}}/>
+
+            <p style={{fontFamily:"'Space Grotesk',sans-serif",fontSize:'clamp(.85rem,2.2vw,1.05rem)',fontWeight:500,color:'#555',margin:'.2rem 0 1.4rem',lineHeight:1.6}}>
+              Draw custom <strong>English</strong> &amp; <strong>বাংলা</strong> fonts &nbsp;·&nbsp; Export real <strong>TTF</strong> files &nbsp;·&nbsp; Share with the world
+            </p>
+
+            <div style={{display:'flex',gap:'.9rem',justifyContent:'center',flexWrap:'wrap',marginBottom:'1.4rem'}}>
+              <button className="btn-ink">✏️ Start Drawing</button>
+              <button className="btn-ghost">📚 Explore Fonts</button>
+            </div>
+
+            <div style={{display:'flex',gap:'.45rem',justifyContent:'center',flexWrap:'wrap',borderTop:'2px dashed #e91e8c44',paddingTop:'1rem'}}>
+              {[['No login ever',false],['English + বাংলা',true],['TTF · WOFF2',false],['Instagram export',true],['Community library',false]].map(([label,pink],i) => (
+                <span key={i} style={{fontFamily:"'Space Grotesk',sans-serif",fontSize:'.7rem',fontWeight:700,color:pink?'#e91e8c':'#000',border:"2px solid "+(pink?'#e91e8c':'#000'),padding:'.18rem .6rem',background:'#fff',letterSpacing:'.06em',textTransform:'uppercase'}}>
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <div style={{display:'flex',alignItems:'center',justifyContent:'center',minHeight:'100vh',width:'100%',padding:'2rem'}}>
+        <ScribbleeeHero />
+      </div>
+    );
+  </script>
+</body>
+</html>

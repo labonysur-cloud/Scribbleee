@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════
+   ANIMATIONS — Scribbleee
+   ═══════════════════════════════════════════ */
+
+/* ── LETTER BOUNCE ────────────────────────── */
+@keyframes letterBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%       { transform: translateY(-8px) rotate(-3deg); }
+  75%       { transform: translateY(-4px) rotate(2deg); }
+}
+
+@keyframes letterWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25%       { transform: rotate(-4deg); }
+  75%       { transform: rotate(4deg); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes wiggle {
+  0%, 100%  { transform: rotate(0deg); }
+  15%        { transform: rotate(-4deg); }
+  30%        { transform: rotate(4deg); }
+  45%        { transform: rotate(-3deg); }
+  60%        { transform: rotate(3deg); }
+  75%        { transform: rotate(-1deg); }
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes drawIn {
+  from { stroke-dashoffset: 1000; opacity: 0; }
+  to   { stroke-dashoffset: 0; opacity: 1; }
+}
+
+/* ── HELPERS ──────────────────────────────── */
+.anim-bounce   { animation: letterBounce 2s ease-in-out infinite; }
+.anim-wobble   { animation: letterWobble 2s ease-in-out infinite; }
+.anim-float    { animation: floatUp 3s ease-in-out infinite; }
+.anim-spin     { animation: spin 6s linear infinite; }
+.anim-wiggle   { animation: wiggle 0.6s ease; }
+.anim-pulse    { animation: pulse 1.5s ease-in-out infinite; }
+.anim-scale-in { animation: scaleIn 0.4s var(--ease-bounce) both; }
+
+/* Stagger children */
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 80ms; }
+.stagger > *:nth-child(3) { animation-delay: 160ms; }
+.stagger > *:nth-child(4) { animation-delay: 240ms; }
+.stagger > *:nth-child(5) { animation-delay: 320ms; }
+.stagger > *:nth-child(6) { animation-delay: 400ms; }
+.stagger > *:nth-child(7) { animation-delay: 480ms; }
+.stagger > *:nth-child(8) { animation-delay: 560ms; }
+.stagger > *:nth-child(9) { animation-delay: 640ms; }
