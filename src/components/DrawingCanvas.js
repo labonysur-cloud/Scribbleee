@@ -31,9 +31,15 @@ export function createDrawingCanvas(options = {}) {
     onStrokeComplete,
     initialStrokes = [],
     showGuides: showGuidesInit = true,
+    templateChar: initialTemplateChar = 'A',
+    templateStyle: initialTemplateStyle = 'sans',
+    templateOpacity: initialTemplateOpacity = 0.25,
   } = options;
 
   let showGuides = showGuidesInit;
+  let templateChar = initialTemplateChar;
+  let templateStyle = initialTemplateStyle;
+  let templateOpacity = initialTemplateOpacity;
 
   let strokes = [...initialStrokes];
   let currentPoints = [];
@@ -79,7 +85,7 @@ export function createDrawingCanvas(options = {}) {
   const gCtx = guideCanvas.getContext('2d');
   const dCtx = drawCanvas.getContext('2d');
 
-  // Draw guide lines
+  // Draw guide lines & template ghost character
   function drawGuides() {
     gCtx.clearRect(0, 0, CANVAS_W, CANVAS_H);
     if (!showGuides) return;
@@ -92,6 +98,28 @@ export function createDrawingCanvas(options = {}) {
     const capheight = 80;
     // Descender — y=530
     const descender = 530;
+
+    // ── Draw background ghost/template character for easy tracing ──
+    if (templateChar && templateOpacity > 0) {
+      gCtx.save();
+      gCtx.globalAlpha = templateOpacity;
+      let fontFam = 'Space Grotesk, system-ui, sans-serif';
+      if (templateStyle === 'serif') fontFam = 'Georgia, serif';
+      if (templateStyle === 'doodle' || templateStyle === 'sketchy') fontFam = 'var(--font-doodle), cursive';
+      gCtx.font = `bold 340px ${fontFam}`;
+      gCtx.textAlign = 'center';
+      gCtx.textBaseline = 'alphabetic';
+
+      // Clean light gray fill
+      gCtx.fillStyle = '#e2e2e2';
+      gCtx.fillText(templateChar, CANVAS_W / 2, baseline);
+
+      // Crisp border stroke like screenshot
+      gCtx.strokeStyle = '#cccccc';
+      gCtx.lineWidth = 5;
+      gCtx.strokeText(templateChar, CANVAS_W / 2, baseline);
+      gCtx.restore();
+    }
 
     const lines = [
       { y: capheight,  color: '#e0e0e0', label: 'Cap height', dashed: false },
@@ -306,6 +334,18 @@ export function createDrawingCanvas(options = {}) {
 
     toggleGuides() {
       showGuides = !showGuides;
+      drawGuides();
+    },
+
+    setShowGuides(val) {
+      showGuides = !!val;
+      drawGuides();
+    },
+
+    setTemplateOverlay(char, style = 'sans', alpha = 0.25) {
+      templateChar = char;
+      templateStyle = style;
+      templateOpacity = alpha;
       drawGuides();
     },
 

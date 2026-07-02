@@ -15,14 +15,16 @@ export function createToolPanel(options = {}) {
   const { onChange } = options;
 
   let state = {
-    tool:       'pen',
-    brushStyle: 'pencil',
-    brushSize:  10,
-    smoothing:  5,
-    opacity:    100,
-    showGuides: true,
-    color:      '#0d0d0d',
-    zoom:       100,
+    tool:            'pen',
+    brushStyle:      'pencil',
+    brushSize:       10,
+    smoothing:       5,
+    opacity:         100,
+    showGuides:      true,
+    color:           '#0d0d0d',
+    zoom:            100,
+    templateStyle:   'sans',
+    templateOpacity: 25,
   };
 
   const panel = document.createElement('div');
@@ -159,6 +161,20 @@ export function createToolPanel(options = {}) {
   `;
   panel.appendChild(buildSection('Guides', guidesSection));
 
+  // ── Template Trace Overlay ─────────────────────────────────
+  const traceSection = document.createElement('div');
+  traceSection.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:var(--space-2);">
+      <button class="btn btn--sm trace-style-btn btn--primary" data-tstyle="sans" style="font-family:var(--font-doodle);font-size:0.7rem;padding:3px;">Sans</button>
+      <button class="btn btn--sm trace-style-btn" data-tstyle="serif" style="font-family:var(--font-doodle);font-size:0.7rem;padding:3px;">Serif</button>
+      <button class="btn btn--sm trace-style-btn" data-tstyle="doodle" style="font-family:var(--font-doodle);font-size:0.7rem;padding:3px;">Doodle</button>
+      <button class="btn btn--sm trace-style-btn" data-tstyle="off" style="font-family:var(--font-doodle);font-size:0.7rem;padding:3px;">Off</button>
+    </div>
+    <div style="font-family:var(--font-doodle);font-size:0.78rem;margin-bottom:2px;" id="trace-val">Trace Opacity: ${state.templateOpacity}%</div>
+    <input type="range" class="slider" id="slider-trace" min="0" max="80" step="5" value="${state.templateOpacity}" />
+  `;
+  panel.appendChild(buildSection('Template Trace', traceSection));
+
   // ── Wire up events ────────────────────────────────────────
 
   // Tool toggle
@@ -242,6 +258,23 @@ export function createToolPanel(options = {}) {
   panel.querySelector('#guides-btn').addEventListener('click', () => {
     state.showGuides = !state.showGuides;
     panel.querySelector('#guides-btn').textContent = `${state.showGuides ? 'Hide' : 'Show'} Guides`;
+    emit();
+  });
+
+  // Template Trace Style
+  panel.querySelectorAll('.trace-style-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.templateStyle = btn.dataset.tstyle;
+      panel.querySelectorAll('.trace-style-btn').forEach(b => b.classList.remove('btn--primary'));
+      btn.classList.add('btn--primary');
+      emit();
+    });
+  });
+
+  // Template Trace Opacity
+  panel.querySelector('#slider-trace').addEventListener('input', (e) => {
+    state.templateOpacity = parseInt(e.target.value);
+    panel.querySelector('#trace-val').textContent = `Trace Opacity: ${state.templateOpacity}%`;
     emit();
   });
 

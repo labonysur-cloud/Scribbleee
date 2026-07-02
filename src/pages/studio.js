@@ -88,7 +88,9 @@ export function renderStudio(container, navigate) {
         canvasWrapper.style.transform = `scale(${state.zoom / 100})`;
         canvasWrapper.style.transformOrigin = 'top center';
       }
-      if (state.showGuides !== undefined) canvasApi.toggleGuides?.();
+      if (state.showGuides !== undefined) canvasApi.setShowGuides?.(state.showGuides);
+      const alpha = state.templateStyle === 'off' ? 0 : (state.templateOpacity !== undefined ? state.templateOpacity / 100 : 0.25);
+      canvasApi.setTemplateOverlay(selectedChar, state.templateStyle || 'sans', alpha);
     },
   });
   editor.appendChild(toolApi.element);
@@ -108,24 +110,10 @@ export function renderStudio(container, navigate) {
     border-right:var(--border);
   `;
 
-  // Ghost letter overlay (large faint background letter for reference)
+  // Ghost letter overlay (hidden since DrawingCanvas now draws crisp template internally)
   const ghostLetter = document.createElement('div');
   ghostLetter.id = 'ghost-letter';
-  ghostLetter.style.cssText = `
-    position:absolute;
-    font-family:var(--font-display);
-    font-size:420px;
-    font-style:italic;
-    color:rgba(0,0,0,0.035);
-    line-height:1;
-    pointer-events:none;
-    user-select:none;
-    z-index:0;
-    top:80px;
-    left:50%;
-    transform:translateX(-50%);
-    white-space:nowrap;
-  `;
+  ghostLetter.style.cssText = `display:none;`;
   ghostLetter.textContent = selectedChar;
 
   // Selected char display
@@ -157,6 +145,9 @@ export function renderStudio(container, navigate) {
 
   canvasApi = createDrawingCanvas({
     showGuides: true,
+    templateChar: selectedChar,
+    templateStyle: 'sans',
+    templateOpacity: 0.25,
     onStrokeComplete(strokes) {
       if (!project.glyphs[selectedChar]) project.glyphs[selectedChar] = {};
       project.glyphs[selectedChar].strokes = strokes;
