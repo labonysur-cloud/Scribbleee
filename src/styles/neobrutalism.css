@@ -458,11 +458,35 @@ body {
 
 /* ── MOBILE RESPONSIVENESS (PHONES & TABLETS) ── */
 @media (max-width: 900px) {
+  .studio-top-bar {
+    padding: 8px 10px !important;
+    gap: 8px !important;
+    justify-content: center !important;
+  }
+  .studio-top-bar input {
+    max-width: 100% !important;
+    width: 100% !important;
+    text-align: center;
+  }
+  .studio-top-actions {
+    margin-left: 0 !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
   .studio-editor {
+    display: flex !important;
     flex-direction: column !important;
     overflow-y: auto !important;
   }
+  .studio-center-col {
+    order: 1 !important;
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: var(--border) !important;
+    padding: var(--space-3) !important;
+  }
   .tool-panel {
+    order: 2 !important;
     width: 100% !important;
     max-height: none !important;
     flex-direction: row !important;
@@ -470,18 +494,14 @@ body {
     justify-content: center !important;
     border-right: none !important;
     border-bottom: var(--border) !important;
-    padding: var(--space-2) !important;
-    gap: var(--space-2) !important;
-  }
-  .studio-center-col {
-    width: 100% !important;
-    border-right: none !important;
-    border-bottom: var(--border) !important;
     padding: var(--space-3) !important;
+    gap: var(--space-3) !important;
   }
   .studio-right-panel {
+    order: 3 !important;
     width: 100% !important;
-    height: 380px !important;
+    height: auto !important;
+    min-height: 400px !important;
   }
   .glyph-grid-panel {
     width: 100% !important;

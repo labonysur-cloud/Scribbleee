@@ -42,6 +42,7 @@ export function renderStudio(container, navigate) {
 
   // ── Top toolbar ──────────────────────────
   const toolbar = document.createElement('div');
+  toolbar.className = 'studio-top-bar';
   toolbar.style.cssText = `
     display:flex;align-items:center;gap:var(--space-3);
     padding:var(--space-3) var(--space-5);
@@ -60,7 +61,7 @@ export function renderStudio(container, navigate) {
       transition:background 0.3s;flex-shrink:0;
     "></span>
 
-    <div style="display:flex;gap:var(--space-2);margin-left:auto;flex-wrap:wrap;">
+    <div class="studio-top-actions" style="display:flex;gap:var(--space-2);margin-left:auto;flex-wrap:wrap;">
       <button class="btn btn--sm" id="lang-toggle" style="font-family:var(--font-doodle);">
         Language: <strong>English</strong>
       </button>
