@@ -212,7 +212,7 @@ function triggerDownload(buf, filename, mimeType) {
 /** Download as TrueType Font (.ttf) */
 export function downloadAsTTF(project) {
   const font   = buildFont(project);
-  const buf    = font.arrayBuffer();
+  const buf    = font.toArrayBuffer();
   const fname  = (project.name || 'scribbleee-font').replace(/[^a-z0-9_-]/gi, '_');
   triggerDownload(buf, `${fname}.ttf`, 'font/truetype');
 }
@@ -220,7 +220,7 @@ export function downloadAsTTF(project) {
 /** Download as OpenType Font (.otf) — same binary as TTF for simple outline fonts */
 export function downloadAsOTF(project) {
   const font  = buildFont(project);
-  const buf   = font.arrayBuffer();
+  const buf   = font.toArrayBuffer();
   const fname = (project.name || 'scribbleee-font').replace(/[^a-z0-9_-]/gi, '_');
   triggerDownload(buf, `${fname}.otf`, 'font/otf');
 }
@@ -228,7 +228,7 @@ export function downloadAsOTF(project) {
 /** Download as WOFF Web Font (.woff) — proper WOFF1 binary wrapper */
 export function downloadAsWOFF(project) {
   const font    = buildFont(project);
-  const ttfBuf  = font.arrayBuffer();
+  const ttfBuf  = font.toArrayBuffer();
   const woffBuf = ttfToWOFF(ttfBuf);
   const fname   = (project.name || 'scribbleee-font').replace(/[^a-z0-9_-]/gi, '_');
   triggerDownload(woffBuf, `${fname}.woff`, 'font/woff');
@@ -242,7 +242,7 @@ export function downloadAsWOFF(project) {
  */
 export function downloadAsWOFF2(project) {
   const font    = buildFont(project);
-  const ttfBuf  = font.arrayBuffer();
+  const ttfBuf  = font.toArrayBuffer();
   const woffBuf = ttfToWOFF(ttfBuf);
   const fname   = (project.name || 'scribbleee-font').replace(/[^a-z0-9_-]/gi, '_');
   triggerDownload(woffBuf, `${fname}.woff2`, 'font/woff2');
@@ -252,7 +252,7 @@ export function downloadAsWOFF2(project) {
 
 /** Get font ArrayBuffer (TTF) for embedding / @font-face */
 export function getFontArrayBuffer(project) {
-  return buildFont(project).arrayBuffer();
+  return buildFont(project).toArrayBuffer();
 }
 
 /** Get base64 data URL for @font-face injection */

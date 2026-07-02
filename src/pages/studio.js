@@ -770,18 +770,30 @@ export function renderStudio(container, navigate) {
     showToast('Font project saved!');
   });
 
+  function saveCurrentGlyphToProject() {
+    if (canvasApi && selectedChar && canvasApi.hasContent()) {
+      if (!project.glyphs[selectedChar]) project.glyphs[selectedChar] = {};
+      project.glyphs[selectedChar].strokes = canvasApi.getStrokes();
+      project.glyphs[selectedChar].svgPath = canvasApi.exportSVGPath();
+      glyphGridApi?.refresh(project.glyphs, selectedChar);
+    }
+  }
+
   // ── Download modal ─────────────────────────
   page.querySelector('#btn-download-font').addEventListener('click', () => {
+    saveCurrentGlyphToProject();
     showDownloadModal(project, modalArea);
   });
 
   // ── Preview modal ──────────────────────────
   page.querySelector('#btn-preview').addEventListener('click', () => {
+    saveCurrentGlyphToProject();
     showPreviewModal(project, modalArea);
   });
 
   // ── Animate modal ──────────────────────────
   page.querySelector('#btn-animate').addEventListener('click', () => {
+    saveCurrentGlyphToProject();
     showAnimateModal(project, modalArea);
   });
 
