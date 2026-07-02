@@ -2,40 +2,40 @@
 export function createNav(navigate, activeRoute) {
   const nav = document.createElement('nav');
   nav.className = 'nav';
-  nav.style.cssText = 'background: #fff0f5; border-bottom: 4px solid #000; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 0 rgba(0,0,0,0.08);';
+  nav.style.cssText = 'background: #fff0f5; border-bottom: 4px solid #000; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 0 rgba(0,0,0,0.08);';
+
+  const isHome = activeRoute === '' || activeRoute === 'home';
+  const isStudio = activeRoute === 'studio';
+  const isLibrary = activeRoute === 'library';
 
   nav.innerHTML = `
-    <div class="nav__logo" style="cursor:pointer; display:flex; align-items:center; gap:8px;" id="nav-logo-box">
-      <div style="background:#000; color:#fff; padding:4px 10px; border-radius:12px; font-family:var(--font-display); font-weight:900; font-size:1.4rem; letter-spacing:-0.05em; border:2px solid #000; box-shadow:3px 3px 0 #ff69b4; transform:rotate(-2deg);">
+    <div class="nav__logo" style="cursor:pointer; display:flex; align-items:center; gap:8px;" id="nav-logo-box" onclick="window.scribbleee && window.scribbleee.navigate('')">
+      <div style="background:#000; color:#fff; padding:4px 12px; border-radius:14px; font-family:var(--font-display); font-weight:900; font-size:1.5rem; letter-spacing:-0.05em; border:2px solid #000; box-shadow:3px 3px 0 #ff69b4; transform:rotate(-2deg);">
         Scribble<span style="color:#ff69b4; font-style:italic;">eee</span>
       </div>
     </div>
-    <div class="nav__links" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-      <button class="btn btn--ghost nav-link ${activeRoute === '' || activeRoute === 'home' ? 'nav-link--active' : ''}" id="nav-home" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700;">Home</button>
-      <button class="btn btn--ghost nav-link ${activeRoute === 'studio' ? 'nav-link--active' : ''}" id="nav-studio" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700;">Draw & Studio</button>
-      <button class="btn btn--ghost nav-link ${activeRoute === 'library' ? 'nav-link--active' : ''}" id="nav-library" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700;">Community Library</button>
-      <button class="btn btn--cute-pink" id="nav-cta" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; padding: 6px 18px;">
+    <div class="nav__links" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center;">
+      <button class="btn btn--ghost nav-link ${isHome ? 'nav-link--active' : ''}" id="nav-home" onclick="window.scribbleee && window.scribbleee.navigate('')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isHome ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Home</button>
+      <button class="btn btn--ghost nav-link ${isStudio ? 'nav-link--active' : ''}" id="nav-studio" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isStudio ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Draw & Studio</button>
+      <button class="btn btn--ghost nav-link ${isLibrary ? 'nav-link--active' : ''}" id="nav-library" onclick="window.scribbleee && window.scribbleee.navigate('library')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:700; ${isLibrary ? 'background:#fce7f3; border:2px solid #000; box-shadow:3px 3px 0 #000; transform:translateY(-2px);' : ''}">Community Library</button>
+      <button class="btn btn--cute-pink" id="nav-cta" onclick="window.scribbleee && window.scribbleee.navigate('studio')" style="font-family:var(--font-doodle); font-size:1.15rem; font-weight:800; display:inline-flex; align-items:center; gap:6px; padding: 6px 18px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color:#ff1493;"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         Create Cute Font
       </button>
     </div>
   `;
 
-  // Active style
-  nav.querySelectorAll('.nav-link').forEach(link => {
-    if (link.classList.contains('nav-link--active')) {
-      link.style.background = '#fce7f3';
-      link.style.border = '2px solid #000';
-      link.style.boxShadow = '3px 3px 0 #000';
-      link.style.transform = 'translateY(-2px)';
-    }
-  });
+  const logoBox = nav.querySelector('#nav-logo-box');
+  const btnHome = nav.querySelector('#nav-home');
+  const btnStudio = nav.querySelector('#nav-studio');
+  const btnLibrary = nav.querySelector('#nav-library');
+  const btnCta = nav.querySelector('#nav-cta');
 
-  nav.querySelector('#nav-logo-box').addEventListener('click', () => navigate(''));
-  nav.querySelector('#nav-home').addEventListener('click', () => navigate(''));
-  nav.querySelector('#nav-studio').addEventListener('click', () => navigate('studio'));
-  nav.querySelector('#nav-library').addEventListener('click', () => navigate('library'));
-  nav.querySelector('#nav-cta').addEventListener('click', () => navigate('studio'));
+  if (logoBox) logoBox.addEventListener('click', () => navigate(''));
+  if (btnHome) btnHome.addEventListener('click', () => navigate(''));
+  if (btnStudio) btnStudio.addEventListener('click', () => navigate('studio'));
+  if (btnLibrary) btnLibrary.addEventListener('click', () => navigate('library'));
+  if (btnCta) btnCta.addEventListener('click', () => navigate('studio'));
 
   return nav;
 }

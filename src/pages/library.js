@@ -7,8 +7,6 @@ export function renderLibrary(container, navigate) {
   const page = document.createElement('div');
   page.className = 'page';
 
-  page.appendChild(createNav(navigate, 'library'));
-
   const style = document.createElement('style');
   style.textContent = `
     .library-header {
@@ -308,6 +306,7 @@ export function renderLibrary(container, navigate) {
     });
   }
 
+  page.prepend(createNav(navigate, 'library'));
   container.appendChild(page);
 }
 

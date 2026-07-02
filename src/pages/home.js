@@ -17,9 +17,7 @@ export function renderHome(container, navigate) {
   const page = document.createElement('div');
   page.className = 'page';
 
-  page.appendChild(createNav(navigate, 'home'));
-
-  page.innerHTML += `
+  page.innerHTML = `
   <style>
     /* ── Hero ─────────────────────────────── */
     .hero {
@@ -566,6 +564,7 @@ export function renderHome(container, navigate) {
     const intervalId = setInterval(renderStopMotion, 180); // ~5.5 FPS slowed down handcrafted loop
   }
 
+  page.prepend(createNav(navigate, 'home'));
   container.appendChild(page);
 }
 

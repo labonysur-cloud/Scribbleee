@@ -455,3 +455,60 @@ body {
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: var(--cream); }
 ::-webkit-scrollbar-thumb { background: var(--black); }
+
+/* ── MOBILE RESPONSIVENESS (PHONES & TABLETS) ── */
+@media (max-width: 768px) {
+  .nav {
+    padding: 10px 14px !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .nav__links {
+    width: 100%;
+    justify-content: center;
+    gap: 8px !important;
+  }
+
+  .nav-link, #nav-cta {
+    font-size: 1rem !important;
+    padding: 6px 12px !important;
+  }
+
+  .hero {
+    padding: var(--space-8) var(--space-4) !important;
+  }
+
+  .hero__title {
+    font-size: clamp(2.8rem, 12vw, 4.5rem) !important;
+  }
+
+  .features__grid, .templates-grid, .zero-db-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .stats-bar {
+    gap: var(--space-6) !important;
+    padding: var(--space-6) var(--space-4) !important;
+  }
+
+  .library-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav__links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav__links .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
