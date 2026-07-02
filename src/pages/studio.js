@@ -801,11 +801,18 @@ function showDownloadModal(project, container) {
       </div>
 
       <div style="border-top:var(--border-sm);border-style:dashed;padding-top:var(--space-4);">
-        <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:var(--space-2);">Share to Library</h3>
-        <p style="font-family:var(--font-doodle);color:var(--gray-500);font-size:0.95rem;margin-bottom:var(--space-3);">
-          Let others discover and download your font too.
+        <h3 style="font-family:var(--font-display);font-size:1.2rem;margin-bottom:var(--space-2);">Share to Community (Zero Database)</h3>
+        <p style="font-family:var(--font-doodle);color:var(--gray-500);font-size:0.9rem;margin-bottom:var(--space-3);">
+          Publish without login or backend servers via GitHub CDN or IPFS network!
         </p>
-        <button class="btn btn--primary" id="dl-share" style="font-family:var(--font-doodle);">Publish to Community</button>
+        <div style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-3);">
+          <input class="input" id="share-author" placeholder="Your Artist Name (e.g. Labony Sur)" style="font-family:var(--font-doodle);font-size:0.9rem;" />
+          <select class="input" id="share-method" style="font-family:var(--font-doodle);font-size:0.9rem;">
+            <option value="github">🌸 Method 1: GitHub Archive (CDN & PR Auto-Merge)</option>
+            <option value="ipfs">🪐 Method 2: IPFS P2P Network (Immutable CID)</option>
+          </select>
+        </div>
+        <button class="btn btn--primary" id="dl-share" style="font-family:var(--font-doodle);width:100%;">Publish to Community</button>
       </div>
     </div>
   `;
@@ -834,10 +841,17 @@ function showDownloadModal(project, container) {
 
   overlay.querySelector('#dl-share').addEventListener('click', async () => {
     try {
+      const author = overlay.querySelector('#share-author').value.trim() || 'Anonymous Artist';
+      const storageMethod = overlay.querySelector('#share-method').value;
+
       let fontData = '';
       try { fontData = getFontDataURL(project); } catch (_) {}
-      await publishFont(project, fontData);
-      showToast('Font published to the community library!');
+      const res = await publishFont(project, fontData, { storageMethod, author });
+      if (storageMethod === 'ipfs') {
+        showToast(`Published to IPFS network! CID: ${res.cid.slice(0, 12)}...`);
+      } else {
+        showToast('Published via GitHub Archive! Available on global CDN.');
+      }
       close();
     } catch (e) {
       showToast('Could not publish font.');

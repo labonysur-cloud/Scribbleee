@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "name": "Scribbleee Public Community Font Archive",
+  "description": "Zero-database community layout powered by static GitHub archives and IPFS CIDs.",
+  "fonts": [
+    {
+      "id": "gh-font-001",
+      "name": "Princess Bubblegum",
+      "author": "Labony Sur",
+      "language": "english",
+      "tags": ["cute", "bubbly", "display", "princess"],
+      "storageMethod": "github",
+      "downloads": 482,
+      "glyphCount": 52,
+      "publishedAt": 1783000000000,
+      "description": "Round, fluffy Neo-Brutalist bubble typography made with love."
+    },
+    {
+      "id": "ipfs-font-002",
+      "name": "মেঘলা আকাশ (Meghla)",
+      "author": "Aupurba Sarker",
+      "language": "bangla",
+      "tags": ["bangla", "clean", "handwriting", "aesthetic"],
+      "storageMethod": "ipfs",
+      "cid": "QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco",
+      "ipfsGateway": "https://ipfs.io/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco",
+      "downloads": 319,
+      "glyphCount": 46,
+      "publishedAt": 1782900000000,
+      "description": "Sweet handwriting font for Bengali poetry and Instagram stories."
+    },
+    {
+      "id": "gh-font-003",
+      "name": "Chunky Brutal",
+      "author": "Studio Scribbleee",
+      "language": "english",
+      "tags": ["bold", "brutalist", "sharp", "headline"],
+      "storageMethod": "github",
+      "downloads": 265,
+      "glyphCount": 36,
+      "publishedAt": 1782800000000,
+      "description": "Thick monochrome block letters designed for high-impact posters."
+    },
+    {
+      "id": "ipfs-font-004",
+      "name": "Dainty Starlet",
+      "author": "Aesthetic Queen",
+      "language": "english",
+      "tags": ["dainty", "cursive", "script", "cute"],
+      "storageMethod": "ipfs",
+      "cid": "QmZTMD2qtEcG1N5EZNJ1F3a1bV2Vq1Gq43N6b6QzL9PqJ8",
+      "ipfsGateway": "https://ipfs.io/ipfs/QmZTMD2qtEcG1N5EZNJ1F3a1bV2Vq1Gq43N6b6QzL9PqJ8",
+      "downloads": 512,
+      "glyphCount": 58,
+      "publishedAt": 1782700000000,
+      "description": "Flowing cursive aesthetic loops inspired by ribbon choreography."
+    },
+    {
+      "id": "gh-font-005",
+      "name": "রঙিন ছড়া (Rangin Chhara)",
+      "author": "Scribbleee Fan",
+      "language": "bangla",
+      "tags": ["bangla", "playful", "kids", "cute"],
+      "storageMethod": "github",
+      "downloads": 184,
+      "glyphCount": 42,
+      "publishedAt": 1782600000000,
+      "description": "Whimsical Bengali character shapes with bouncy baselines."
+    },
+    {
+      "id": "ipfs-font-006",
+      "name": "Sketchy Diary",
+      "author": "Doodle Master",
+      "language": "english",
+      "tags": ["sketchy", "rough", "doodle", "notebook"],
+      "storageMethod": "ipfs",
+      "cid": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+      "ipfsGateway": "https://ipfs.io/ipfs/QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+      "downloads": 394,
+      "glyphCount": 62,
+      "publishedAt": 1782500000000,
+      "description": "Energetic multi-pass sketchbook lines for organic notes."
+    }
+  ]
+}
