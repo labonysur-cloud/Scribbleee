@@ -156,9 +156,10 @@ export function createDrawingCanvas(options = {}) {
   wrapper.className = 'canvas-wrapper';
   wrapper.style.cssText = `
     position: relative;
-    width: 100%;
-    max-width: ${CANVAS_W}px;
-    aspect-ratio: 5 / 6;
+    width: ${CANVAS_W}px;
+    height: ${CANVAS_H}px;
+    max-width: 100%;
+    max-height: 100%;
     border: var(--border-lg);
     background: #ffffff;
     box-shadow: var(--shadow-lg);

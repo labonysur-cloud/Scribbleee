@@ -497,7 +497,7 @@ body {
     min-height: 480px !important;
     overflow: visible !important;
   }
-  .canvas-wrapper {
+  .studio-canvas-wrapper, .canvas-wrapper {
     width: 100% !important;
     max-width: 380px !important;
     aspect-ratio: 5 / 6 !important;
@@ -507,7 +507,7 @@ body {
     display: block !important;
     position: relative !important;
   }
-  .canvas-wrapper canvas {
+  .studio-canvas-wrapper canvas, .canvas-wrapper canvas {
     width: 100% !important;
     height: 100% !important;
   }
