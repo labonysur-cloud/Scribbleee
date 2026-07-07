@@ -330,18 +330,46 @@ function createFontCard(font, index, navigate) {
 
   card.querySelector('.dl-btn').addEventListener('click', async (e) => {
     e.stopPropagation();
-    const id = e.target.dataset.id;
-    await incrementDownload(id);
+    const btn = e.currentTarget;
+    const id  = btn.dataset.id;
 
-    if (font.fontData) {
-      const a = document.createElement('a');
-      a.href = font.fontData;
-      a.download = `${font.name.replace(/\s+/g, '_')}.ttf`;
-      a.click();
-      showToast(`Downloaded "${font.name}"!`);
-    } else {
-      showToast(`Generating draft font for "${font.name}"... Try drawing your own in Studio!`);
+    // fontUrl = CDN link on GitHub (visible to everyone)
+    // fontData = legacy local base64 blob (only visible to uploader)
+    const downloadUrl = font.fontUrl || font.fontData;
+
+    if (!downloadUrl) {
+      showToast('Font file not available. Try drawing your own in Studio!');
       navigate('studio');
+      return;
+    }
+
+    btn.textContent = 'Downloading…';
+    btn.disabled = true;
+
+    try {
+      // Fetch the font bytes then trigger a local blob download.
+      // This is required because cross-origin CDN URLs ignore the HTML
+      // `download` attribute — browsers would just navigate instead.
+      const res  = await fetch(downloadUrl);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `${font.name.replace(/[^a-z0-9_\-]/gi, '_')}.ttf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 3000);
+
+      await incrementDownload(id);
+      showToast(`✅ Downloaded "${font.name}"!`);
+    } catch (err) {
+      console.error('[download]', err);
+      showToast('Download failed. Font may still be propagating — try again in a minute!');
+    } finally {
+      btn.textContent = 'Download';
+      btn.disabled = false;
     }
   });
 

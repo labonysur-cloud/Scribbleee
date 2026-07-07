@@ -1183,24 +1183,36 @@ function showDirectPublishModal(project, container, navigate) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
-    <div class="modal" style="max-width:500px;width:95%;">
+    <div class="modal" style="max-width:520px;width:95%;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
         <h2 style="font-family:var(--font-display);font-size:1.8rem;color:#ff1493;">Publish to Community</h2>
-        <button class="btn btn--sm" id="pub-close">X</button>
+        <button class="btn btn--sm" id="pub-close">✕</button>
       </div>
-      <p style="font-family:var(--font-doodle);font-size:0.95rem;color:var(--gray-500);margin-bottom:var(--space-4);line-height:1.5;">
-        Publish <strong>"${project.name}"</strong> to the public Scribbleee Community Library so anyone can discover, download, and create with your font!
-      </p>
+
+      <div style="background:#f0fdf4;border:2px solid #22c55e;border-radius:6px;padding:var(--space-3);margin-bottom:var(--space-4);font-family:var(--font-doodle);font-size:0.88rem;line-height:1.55;color:#166534;">
+        🌍 <strong>This font will be visible to everyone</strong> — people from Dhaka, Chittagong, London, anywhere!<br>
+        Your font is saved to GitHub and served via global CDN. <strong>100% free, no database.</strong>
+      </div>
+
       <div style="background:var(--cream);padding:var(--space-3);border:var(--border-sm);border-radius:4px;margin-bottom:var(--space-4);">
-        <div style="font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-400);margin-bottom:var(--space-1);">Glyphs ready:</div>
-        <div style="font-family:var(--font-display);font-size:1.3rem;">${glyphCount} Character${glyphCount !== 1 ? 's' : ''} Drawn</div>
+        <div style="font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-400);margin-bottom:var(--space-1);">Font ready to share:</div>
+        <div style="font-family:var(--font-display);font-size:1.3rem;">${project.name} — ${glyphCount} Character${glyphCount !== 1 ? 's' : ''} Drawn</div>
       </div>
+
+      <div style="margin-bottom:var(--space-3);">
+        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;font-weight:700;margin-bottom:4px;">Your Name / Artist Name:</label>
+        <input class="input" id="pub-author" placeholder="e.g. Labony Sur" style="width:100%;font-family:var(--font-doodle);" />
+      </div>
+
       <div style="margin-bottom:var(--space-4);">
-        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;margin-bottom:4px;">Artist / Creator Name:</label>
-        <input class="input" id="pub-author" placeholder="Labony Sur" value="Labony Sur" style="width:100%;font-family:var(--font-doodle);" />
+        <label style="display:block;font-family:var(--font-doodle);font-size:0.9rem;font-weight:700;margin-bottom:4px;">Short Description (optional):</label>
+        <textarea class="input" id="pub-desc" rows="2" placeholder="e.g. Cute handwritten font for Instagram stories" style="width:100%;font-family:var(--font-doodle);resize:none;"></textarea>
       </div>
+
+      <div id="pub-status" style="display:none;font-family:var(--font-doodle);font-size:0.9rem;color:var(--gray-500);margin-bottom:var(--space-3);padding:var(--space-2) var(--space-3);background:var(--cream);border:var(--border-sm);border-radius:4px;"></div>
+
       <button class="btn btn--cute-pink" id="pub-confirm" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.15rem;padding:12px;">
-        Publish to Library
+        🚀 Publish for Everyone
       </button>
     </div>
   `;
@@ -1210,30 +1222,55 @@ function showDirectPublishModal(project, container, navigate) {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 
   overlay.querySelector('#pub-confirm').addEventListener('click', async () => {
+    if (glyphCount === 0) {
+      showToast('✏️ Draw at least 1 character before publishing!');
+      return;
+    }
+
+    const author      = overlay.querySelector('#pub-author').value.trim() || 'Anonymous Artist';
+    const description = overlay.querySelector('#pub-desc').value.trim();
+    const confirmBtn  = overlay.querySelector('#pub-confirm');
+    const statusEl    = overlay.querySelector('#pub-status');
+
+    const setStatus = (msg) => {
+      statusEl.style.display = 'block';
+      statusEl.textContent   = msg;
+    };
+
+    confirmBtn.textContent = '⏳ Uploading font…';
+    confirmBtn.disabled    = true;
+    overlay.querySelector('#pub-close').disabled = true;
+
     try {
-      if (glyphCount === 0) {
-        showToast('Draw at least 1 character before publishing!');
-        return;
-      }
-      const author = overlay.querySelector('#pub-author').value.trim() || 'Labony Sur';
-      const storageMethod = 'github';
-
-      const confirmBtn = overlay.querySelector('#pub-confirm');
-      confirmBtn.textContent = 'Publishing font...';
-      confirmBtn.disabled = true;
-
+      setStatus('Step 1/2 — Building font file…');
       let fontData = '';
       try { fontData = getFontDataURL(project); } catch (_) {}
-      await publishFont(project, fontData, { storageMethod, author });
-      
-      showToast('Successfully Published to Community Library!');
-      close();
-      if (navigate) navigate('library');
-    } catch (e) {
-      showToast('Could not publish font. Try drawing more characters.');
-      console.error(e);
+
+      if (!fontData) throw new Error('Could not build font file. Make sure you have drawn some characters.');
+
+      setStatus('Step 2/2 — Uploading to GitHub (this takes ~10 seconds)…');
+      await publishFont(project, fontData, { author, description });
+
+      setStatus('✅ Font published! It is now live for everyone worldwide.');
+      confirmBtn.textContent = '✅ Published!';
+      showToast(`🎉 "${project.name}" is now live in the Community Library!`);
+
+      setTimeout(() => {
+        close();
+        if (navigate) navigate('library');
+      }, 1800);
+
+    } catch (err) {
+      console.error('[publish]', err);
+      statusEl.style.display = 'block';
+      statusEl.style.color   = '#dc2626';
+      statusEl.textContent   = `❌ Error: ${err.message}`;
+      confirmBtn.textContent = '🚀 Publish for Everyone';
+      confirmBtn.disabled    = false;
+      overlay.querySelector('#pub-close').disabled = false;
     }
   });
 
   container.appendChild(overlay);
 }
+

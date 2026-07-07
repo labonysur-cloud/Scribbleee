@@ -1,0 +1,3 @@
+# This directory stores community-published font files (.ttf)
+# uploaded to GitHub via the /api/publish-font Vercel function.
+# Files are served globally via jsDelivr CDN.
