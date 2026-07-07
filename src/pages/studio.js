@@ -11,7 +11,7 @@ import {
   downloadAsTTF, downloadAsOTF, downloadAsWOFF, downloadAsWOFF2,
   getFontDataURL, strokesToSVGPath,
 } from '../lib/fontBuilder.js';
-import { exportInstagramVideo, downloadVideoBlob } from '../lib/instagramExport.js';
+import { exportInstagramVideo, downloadVideoBlob, renderPreviewFrame } from '../lib/instagramExport.js';
 import { getTemplate, getAllTemplates, TEMPLATE_STYLES, hasTemplate } from '../lib/templates.js';
 
 export function renderStudio(container, navigate) {
@@ -1068,111 +1068,239 @@ function showDownloadModal(project, container) {
 
 // ── Animate modal ────────────────────────────────────────────
 function showAnimateModal(project, container) {
-  const EFFECTS = ['bounce', 'wave', 'typewriter', 'fade', 'shake', 'zoom'];
+  const EFFECTS = ['bounce', 'wave', 'typewriter', 'fade', 'shake', 'zoom', 'glitter'];
 
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
-    <div class="modal" style="max-width:560px;width:95%;">
+    <div class="modal" style="max-width:620px;width:95%;max-height:92vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
-        <h2 style="font-family:var(--font-display);font-size:1.8rem;">Instagram Animation</h2>
-        <button class="btn btn--sm btn--icon" id="anim-close">X</button>
+        <div>
+          <h2 style="font-family:var(--font-display);font-size:1.8rem;">Instagram Export</h2>
+          <p style="font-family:var(--font-doodle);font-size:0.82rem;color:var(--gray-400);margin-top:2px;">
+            Renders your actual hand-drawn font • 1080×1920 Story size
+          </p>
+        </div>
+        <button class="btn btn--sm btn--icon" id="anim-close">✕</button>
       </div>
 
-      <div style="margin-bottom:var(--space-4);">
-        <label class="label">Text to animate</label>
-        <input class="input" id="anim-text" value="${project.name}" style="font-family:var(--font-doodle);" />
+      <!-- Live preview canvas (scaled down 1080×1920 → 180×320) -->
+      <div style="display:flex;justify-content:center;margin-bottom:var(--space-5);">
+        <div style="position:relative;border:var(--border);box-shadow:var(--shadow);border-radius:4px;overflow:hidden;flex-shrink:0;">
+          <canvas id="anim-preview-canvas" width="1080" height="1920"
+            style="display:block;width:180px;height:320px;"></canvas>
+          <div id="anim-preview-loading" style="
+            position:absolute;inset:0;background:rgba(255,255,255,0.85);
+            display:flex;align-items:center;justify-content:center;
+            font-family:var(--font-doodle);font-size:0.75rem;color:var(--gray-400);
+          ">Rendering…</div>
+        </div>
+        <div style="padding-left:var(--space-5);flex:1;display:flex;flex-direction:column;gap:var(--space-4);">
+
+          <div>
+            <label class="label">Text to animate</label>
+            <textarea class="input" id="anim-text" rows="3"
+              style="font-family:var(--font-doodle);resize:none;width:100%;"
+              placeholder="Type your text here…">${project.name}</textarea>
+          </div>
+
+          <div>
+            <label class="label">Font size: <span id="anim-fontsize-val">140</span>px</label>
+            <input type="range" id="anim-fontsize" min="60" max="260" value="140" step="10"
+              style="width:100%;accent-color:var(--black);" />
+          </div>
+
+          <div style="display:flex;gap:var(--space-3);">
+            <div>
+              <label class="label">Text color</label>
+              <input type="color" id="anim-textcolor" value="#0d0d0d"
+                style="width:48px;height:36px;border:var(--border);cursor:pointer;background:none;" />
+            </div>
+            <div>
+              <label class="label">Background</label>
+              <input type="color" id="anim-bgcolor" value="#fafafa"
+                style="width:48px;height:36px;border:var(--border);cursor:pointer;background:none;" />
+            </div>
+            <div>
+              <label class="label">Duration (s)</label>
+              <input type="number" class="input" id="anim-duration" value="3" min="1" max="15"
+                style="width:70px;" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div style="margin-bottom:var(--space-4);">
+      <!-- Effect picker -->
+      <div style="margin-bottom:var(--space-5);">
         <label class="label">Animation effect</label>
         <div style="display:flex;gap:var(--space-2);flex-wrap:wrap;" id="effect-btns">
           ${EFFECTS.map((e, i) => `
-            <button class="btn btn--sm effect-btn ${i === 0 ? 'btn--primary' : ''}" data-effect="${e}" style="font-family:var(--font-doodle);">
+            <button class="btn btn--sm effect-btn ${i === 0 ? 'btn--primary' : ''}" data-effect="${e}"
+              style="font-family:var(--font-doodle);">
               ${e.charAt(0).toUpperCase() + e.slice(1)}
             </button>
           `).join('')}
         </div>
       </div>
 
-      <div style="display:flex;gap:var(--space-4);margin-bottom:var(--space-5);flex-wrap:wrap;">
-        <div>
-          <label class="label">Text color</label>
-          <input type="color" id="anim-textcolor" value="#0d0d0d"
-            style="width:48px;height:40px;border:var(--border);cursor:pointer;background:none;" />
-        </div>
-        <div>
-          <label class="label">Background</label>
-          <input type="color" id="anim-bgcolor" value="#fafafa"
-            style="width:48px;height:40px;border:var(--border);cursor:pointer;background:none;" />
-        </div>
-        <div>
-          <label class="label" for="anim-duration">Duration (sec)</label>
-          <input type="number" class="input" id="anim-duration" value="3" min="1" max="15"
-            style="width:80px;" />
-        </div>
-      </div>
-
+      <!-- Progress bar -->
       <div id="anim-progress" style="display:none;margin-bottom:var(--space-4);">
-        <div style="font-family:var(--font-doodle);margin-bottom:var(--space-2);">Generating video...</div>
-        <div style="height:8px;background:var(--gray-200);border:var(--border-sm);">
-          <div id="anim-bar" style="height:100%;background:var(--black);width:0%;transition:width 0.2s;"></div>
+        <div id="anim-status-text" style="font-family:var(--font-doodle);margin-bottom:var(--space-2);font-size:0.9rem;"></div>
+        <div style="height:10px;background:var(--gray-200);border:var(--border-sm);border-radius:4px;overflow:hidden;">
+          <div id="anim-bar" style="height:100%;background:var(--black);width:0%;transition:width 0.15s;"></div>
         </div>
       </div>
 
-      <div style="display:flex;gap:var(--space-3);">
-        <button class="btn btn--primary" id="anim-export" style="font-family:var(--font-doodle);">Export for Instagram</button>
+      <div style="display:flex;gap:var(--space-3);align-items:center;">
+        <button class="btn btn--primary" id="anim-export"
+          style="font-family:var(--font-doodle);font-weight:800;padding:10px 24px;">
+          ⬇️ Export for Instagram
+        </button>
         <button class="btn" id="anim-close2" style="font-family:var(--font-doodle);">Cancel</button>
       </div>
-      <p style="font-family:var(--font-doodle);font-size:0.8rem;color:var(--gray-400);margin-top:var(--space-3);">
-        Exports a 1080x1920 WebM video. Save it and upload directly to Instagram Stories.
-      </p>
+
+      <div style="margin-top:var(--space-3);padding:var(--space-3);background:var(--cream);border:var(--border-sm);border-radius:4px;">
+        <p style="font-family:var(--font-doodle);font-size:0.8rem;color:var(--gray-500);line-height:1.5;margin:0;">
+          📱 Downloads a <strong>.webm</strong> video (1080×1920).
+          Works on Instagram Stories, Reels, and TikTok.<br>
+          ⚠️ <strong>iPhone users:</strong> WebM isn't natively playable on iOS — use
+          <a href="https://cloudconvert.com/webm-to-mp4" target="_blank" style="color:var(--black);">CloudConvert</a>
+          to convert to MP4 first.
+        </p>
+      </div>
     </div>
   `;
 
-  let selectedEffect = 'bounce';
+  let selectedEffect  = 'bounce';
+  let previewDebounce = null;
+
   const close = () => overlay.remove();
   overlay.querySelector('#anim-close').addEventListener('click', close);
   overlay.querySelector('#anim-close2').addEventListener('click', close);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
 
+  // ── Effect button toggle ──────────────────────────────────────────
   overlay.querySelectorAll('.effect-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       overlay.querySelectorAll('.effect-btn').forEach(b => b.classList.remove('btn--primary'));
       btn.classList.add('btn--primary');
       selectedEffect = btn.dataset.effect;
+      schedulePreview();
     });
   });
 
+  // ── Font size display ─────────────────────────────────────────────
+  const sizeInput = overlay.querySelector('#anim-fontsize');
+  const sizeLabel = overlay.querySelector('#anim-fontsize-val');
+  sizeInput.addEventListener('input', () => {
+    sizeLabel.textContent = sizeInput.value;
+    schedulePreview();
+  });
+
+  // ── Live preview updater ──────────────────────────────────────────
+  const previewCanvas  = overlay.querySelector('#anim-preview-canvas');
+  const previewLoading = overlay.querySelector('#anim-preview-loading');
+
+  function getPreviewOptions() {
+    return {
+      text:        overlay.querySelector('#anim-text').value || project.name,
+      fontFamily:  project.name || 'Scribbleee Font',
+      fontDataUrl: (() => { try { return getFontDataURL(project); } catch (_) { return null; } })(),
+      effect:      selectedEffect,
+      textColor:   overlay.querySelector('#anim-textcolor').value,
+      bgColor:     overlay.querySelector('#anim-bgcolor').value,
+      fontSize:    parseInt(sizeInput.value) || 140,
+      frameRatio:  0.33,
+    };
+  }
+
+  async function updatePreview() {
+    previewLoading.style.display = 'flex';
+    try {
+      await renderPreviewFrame(previewCanvas, getPreviewOptions());
+    } catch (_) {}
+    previewLoading.style.display = 'none';
+  }
+
+  function schedulePreview() {
+    clearTimeout(previewDebounce);
+    previewDebounce = setTimeout(updatePreview, 280);
+  }
+
+  // Update preview on text / color changes
+  ['#anim-text', '#anim-textcolor', '#anim-bgcolor'].forEach(sel => {
+    overlay.querySelector(sel).addEventListener('input', schedulePreview);
+  });
+
+  // Initial preview render
+  updatePreview();
+
+  // ── Export button ─────────────────────────────────────────────────
   overlay.querySelector('#anim-export').addEventListener('click', async () => {
+    const exportBtn  = overlay.querySelector('#anim-export');
+    const progressEl = overlay.querySelector('#anim-progress');
+    const barEl      = overlay.querySelector('#anim-bar');
+    const statusEl   = overlay.querySelector('#anim-status-text');
+    const closeBtn   = overlay.querySelector('#anim-close');
+
     const text      = overlay.querySelector('#anim-text').value || project.name;
     const textColor = overlay.querySelector('#anim-textcolor').value;
     const bgColor   = overlay.querySelector('#anim-bgcolor').value;
-    const duration  = parseInt(overlay.querySelector('#anim-duration').value) || 3;
+    const duration  = Math.max(1, Math.min(15, parseInt(overlay.querySelector('#anim-duration').value) || 3));
+    const fontSize  = parseInt(sizeInput.value) || 140;
 
-    const progressEl = overlay.querySelector('#anim-progress');
-    const barEl      = overlay.querySelector('#anim-bar');
+    let fontDataUrl = null;
+    try { fontDataUrl = getFontDataURL(project); } catch (_) {}
+
+    exportBtn.disabled   = true;
+    exportBtn.textContent = '⏳ Exporting…';
     progressEl.style.display = 'block';
+    closeBtn.disabled    = true;
+    barEl.style.width    = '0%';
+
+    const setStatus = (msg) => { statusEl.textContent = msg; };
+    const setProgress = (p) => { barEl.style.width = `${(p * 100).toFixed(0)}%`; };
 
     try {
       const blob = await exportInstagramVideo({
         text,
-        effect:    selectedEffect,
+        fontFamily:  project.name || 'Scribbleee Font',
+        fontDataUrl,
+        effect:      selectedEffect,
         textColor,
         bgColor,
+        fontSize,
         duration,
-        onProgress: (p) => { barEl.style.width = `${(p * 100).toFixed(0)}%`; },
+        onProgress:  setProgress,
+        onStatus:    setStatus,
       });
-      downloadVideoBlob(blob, `${project.name}-story.webm`);
-      showToast('Video downloaded! Upload it to Instagram Stories.');
-    } catch (e) {
-      showToast('Could not export video. Try a different browser.');
-      console.error(e);
-    } finally {
+
+      setProgress(1);
+      setStatus('✅ Done! Saving file…');
+
+      const safeFilename = (project.name || 'scribbleee').replace(/[^a-z0-9_-]/gi, '_');
+      downloadVideoBlob(blob, `${safeFilename}-story.webm`);
+      showToast('🎬 Video exported! Upload it to Instagram Stories.');
+
+      setTimeout(() => {
+        progressEl.style.display = 'none';
+        barEl.style.width        = '0%';
+        exportBtn.textContent    = '⬇️ Export for Instagram';
+        exportBtn.disabled       = false;
+        closeBtn.disabled        = false;
+      }, 2000);
+
+    } catch (err) {
+      console.error('[instagram-export]', err);
+      setStatus('');
       progressEl.style.display = 'none';
-      barEl.style.width = '0%';
+      exportBtn.textContent    = '⬇️ Export for Instagram';
+      exportBtn.disabled       = false;
+      closeBtn.disabled        = false;
+      showToast(`❌ Export failed: ${err.message}`);
     }
   });
+
   container.appendChild(overlay);
 }
 
