@@ -108,21 +108,29 @@ export function renderLibrary(container, navigate) {
       box-shadow: var(--shadow-lg);
     }
 
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
     .font-card__preview {
-      height: 170px;
+      height: 190px;
       background: var(--cream);
       border-bottom: var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-display);
-      font-style: italic;
-      font-size: 3.8rem;
-      letter-spacing: -0.04em;
-      color: var(--black);
       position: relative;
       overflow: hidden;
+      cursor: text;
     }
+
+    /* Pause the card lift when user is hovering the preview to type */
+    .font-card:has(.font-preview-tester:hover) {
+      transform: none !important;
+      box-shadow: var(--shadow) !important;
+    }
+
 
     .storage-badge {
       position: absolute;
@@ -301,12 +309,69 @@ function createFontCard(font, index, navigate) {
   card.className = 'font-card anim-scale-in';
   card.style.animationDelay = `${index * 50}ms`;
 
-  const previewLetters = font.language === 'bangla' ? 'ক খ গ' : (font.name.slice(0, 3).toUpperCase() || 'ABC');
-  const ago = timeAgo(font.publishedAt || Date.now());
+  // Unique CSS font-family name for this card (avoids conflicts between cards)
+  const familyName   = `scribbleee-prev-${font.id}`;
+  const previewText  = font.language === 'bangla' ? 'ক খ গ ঘ' : 'Aa Bb Cc';
+  const ago          = timeAgo(font.publishedAt || Date.now());
+
   card.innerHTML = `
-    <div class="font-card__preview">
-      <span style="transition:transform 0.3s var(--ease-bounce);">${previewLetters}</span>
+    <div class="font-card__preview" style="position:relative;overflow:hidden;">
+
+      <!-- Shimmer loading skeleton shown while font loads -->
+      <div class="font-preview-shimmer" style="
+        position:absolute;inset:0;
+        background:linear-gradient(90deg,var(--cream) 25%,#f9f0e8 50%,var(--cream) 75%);
+        background-size:200% 100%;
+        animation:shimmer 1.4s infinite;
+        display:flex;align-items:center;justify-content:center;
+      ">
+        <span style="font-family:var(--font-doodle);font-size:0.85rem;color:var(--gray-300);letter-spacing:0.05em;">loading…</span>
+      </div>
+
+      <!-- Actual font preview (fades in once font is loaded) -->
+      <span class="font-preview-text" style="
+        font-family: '${familyName}', var(--font-display);
+        font-size: 3.2rem;
+        letter-spacing: -0.02em;
+        color: var(--black);
+        position:relative;
+        z-index:2;
+        opacity:0;
+        transition: opacity 0.5s ease;
+      ">${previewText}</span>
+
+      <!-- "Try it" type tester — shown on hover -->
+      <div class="font-preview-tester" style="
+        position:absolute;inset:0;
+        background:rgba(255,255,255,0.96);
+        display:flex;flex-direction:column;align-items:center;justify-content:center;
+        gap:6px;
+        opacity:0;
+        transition:opacity 0.25s ease;
+        z-index:3;
+        padding:12px;
+      ">
+        <span style="font-family:var(--font-doodle);font-size:0.7rem;color:var(--gray-400);font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">Type to preview</span>
+        <input
+          class="font-tester-input"
+          type="text"
+          placeholder="${previewText}"
+          maxlength="12"
+          style="
+            font-family:'${familyName}', var(--font-display);
+            font-size:2rem;
+            border:none;
+            border-bottom:2px solid var(--black);
+            background:transparent;
+            width:100%;
+            text-align:center;
+            outline:none;
+            color:var(--black);
+          "
+        />
+      </div>
     </div>
+
     <div class="font-card__body">
       <h3 class="font-card__name">${font.name}</h3>
       <div class="font-card__author">by ${font.author || 'Anonymous'}</div>
@@ -317,19 +382,61 @@ function createFontCard(font, index, navigate) {
       </div>
       <div class="font-card__footer">
         <div class="font-card__stats">
-          ${font.glyphCount || 0} glyphs * ${font.downloads || 0} dl * ${ago}
+          ${font.glyphCount || 0} glyphs · ${font.downloads || 0} downloads · ${ago}
         </div>
         <div style="display:flex;gap:var(--space-2);">
           <button class="btn btn--sm btn--cute-pink dl-btn" data-id="${font.id}" style="font-family:var(--font-doodle);font-weight:800;">
             Download
           </button>
-          <button class="btn btn--sm del-btn" data-id="${font.id}" title="Delete this font" style="font-family:var(--font-doodle);font-weight:700;background:#fff;border:2px solid #dc2626;color:#dc2626;" >
+          <button class="btn btn--sm del-btn" data-id="${font.id}" title="Delete this font" style="font-family:var(--font-doodle);font-weight:700;background:#fff;border:2px solid #dc2626;color:#dc2626;">
             🗑️
           </button>
         </div>
       </div>
     </div>
   `;
+
+  // ── Load the real font via FontFace API ───────────────────────────
+  const fontUrl = font.fontUrl || font.fontData;
+  if (fontUrl) {
+    const ff = new FontFace(familyName, `url(${fontUrl})`);
+    ff.load()
+      .then(loaded => {
+        document.fonts.add(loaded);
+        // Fade out shimmer, fade in real preview
+        const shimmer = card.querySelector('.font-preview-shimmer');
+        const preview = card.querySelector('.font-preview-text');
+        const testerInput = card.querySelector('.font-tester-input');
+        if (shimmer) shimmer.style.opacity = '0';
+        if (preview) preview.style.opacity = '1';
+        if (testerInput) testerInput.style.fontFamily = `'${familyName}', var(--font-display)`;
+      })
+      .catch(() => {
+        // Font failed to load — show fallback text normally
+        const shimmer = card.querySelector('.font-preview-shimmer');
+        const preview = card.querySelector('.font-preview-text');
+        if (shimmer) { shimmer.style.animation = 'none'; shimmer.style.opacity = '0'; }
+        if (preview) { preview.style.opacity = '1'; }
+      });
+  } else {
+    // No URL (static curated font with no file) — just show text in display font
+    const shimmer = card.querySelector('.font-preview-shimmer');
+    const preview = card.querySelector('.font-preview-text');
+    if (shimmer) { shimmer.style.animation = 'none'; shimmer.style.opacity = '0'; }
+    if (preview) { preview.style.opacity = '1'; }
+  }
+
+  // ── Hover: show the live type-tester input ────────────────────────
+  const previewBox = card.querySelector('.font-card__preview');
+  const tester     = card.querySelector('.font-preview-tester');
+  const input      = card.querySelector('.font-tester-input');
+
+  previewBox.addEventListener('mouseenter', () => { tester.style.opacity = '1'; input.focus(); });
+  previewBox.addEventListener('mouseleave', () => { tester.style.opacity = '0'; });
+  // Stop card click when interacting with input
+  input.addEventListener('click', e => e.stopPropagation());
+  input.addEventListener('keydown', e => e.stopPropagation());
+
 
   card.querySelector('.dl-btn').addEventListener('click', async (e) => {
     e.stopPropagation();
