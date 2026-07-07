@@ -61,6 +61,12 @@ export function createEmptyProject(name = 'My Cute Font', language = 'english') 
 //
 // The Vercel function keeps the GitHub token secret — it never touches the browser.
 
+// Generate a SHA-256 hash of a string in the browser
+async function hashDeleteKey(key) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(key));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 export async function publishFont(project, fontDataUrl, options = {}) {
   const author      = (options.author      || 'Anonymous Artist').trim();
   const description = (options.description || 'Custom typography created in Scribbleee Studio.').trim();
@@ -72,6 +78,10 @@ export async function publishFont(project, fontDataUrl, options = {}) {
 
   const fontId = project.id || crypto.randomUUID();
 
+  // Generate a one-time secret delete key (shown to publisher, never stored raw)
+  const deleteKey     = crypto.randomUUID() + '-' + crypto.randomUUID();
+  const deleteKeyHash = await hashDeleteKey(deleteKey);
+
   const payload = {
     fontId,
     fontName:    project.name    || 'My Cute Font',
@@ -82,6 +92,7 @@ export async function publishFont(project, fontDataUrl, options = {}) {
     glyphCount:  Object.keys(project.glyphs || {}).filter(k => project.glyphs[k]?.strokes?.length > 0).length,
     thumbnail:   project.thumbnail || null,
     fontBase64,
+    deleteKeyHash,  // stored on GitHub — used to verify delete requests
   };
 
   const res = await fetch(PUBLISH_API, {
@@ -97,11 +108,11 @@ export async function publishFont(project, fontDataUrl, options = {}) {
 
   const result = await res.json();
 
-  // Also save to local cache so the publisher sees their font instantly
-  // (jsDelivr CDN may take a few minutes to propagate the new commit)
+  // Save to local cache so the publisher sees their font instantly
   await communityCache.setItem(result.entry.id, result.entry);
 
-  return result.entry;
+  // Return both the entry AND the raw delete key (shown once to publisher)
+  return { entry: result.entry, deleteKey };
 }
 
 // ── Community Font Discovery (reads from GitHub via jsDelivr CDN) ─────────────
@@ -148,4 +159,28 @@ export async function incrementDownload(id) {
     cached.downloads = (cached.downloads || 0) + 1;
     await communityCache.setItem(id, cached);
   }
+}
+
+// ── Delete a community font (requires the original delete key) ────────────────
+// Calls /api/delete-font which:
+//   1. Verifies SHA-256(deleteKey) matches the stored hash
+//   2. Deletes the .ttf file from GitHub repo
+//   3. Removes the entry from community-fonts.json
+export async function deleteFont(fontId, deleteKey) {
+  const res = await fetch('/api/delete-font', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fontId, deleteKey }),
+  });
+
+  const data = await res.json().catch(() => ({ error: res.statusText }));
+
+  if (!res.ok) {
+    throw new Error(data.error || `Delete failed: ${res.status}`);
+  }
+
+  // Remove from local cache too
+  await communityCache.removeItem(fontId);
+
+  return data;
 }

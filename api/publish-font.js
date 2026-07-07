@@ -69,6 +69,7 @@ export default async function handler(req, res) {
       glyphCount,
       thumbnail,
       fontBase64,   // raw base64 string of TTF binary (no data:... prefix)
+      deleteKeyHash, // SHA-256 hash of the publisher's delete key
     } = req.body;
 
     // ── Validate required fields ──────────────────────────────────
@@ -119,18 +120,19 @@ export default async function handler(req, res) {
 
     // ── Step 3: Build the new font entry ──────────────────────────
     const newEntry = {
-      id:           safeId,
-      name:         fontName,
-      author:       author    || 'Anonymous Artist',
-      description:  description || 'Custom typography created in Scribbleee Studio.',
-      language:     language  || 'english',
-      tags:         tags      || ['custom'],
-      glyphCount:   glyphCount || 0,
-      thumbnail:    thumbnail || null,
-      fontUrl:      fontCdnUrl,
-      downloads:    0,
-      publishedAt:  Date.now(),
+      id:            safeId,
+      name:          fontName,
+      author:        author       || 'Anonymous Artist',
+      description:   description  || 'Custom typography created in Scribbleee Studio.',
+      language:      language     || 'english',
+      tags:          tags         || ['custom'],
+      glyphCount:    glyphCount   || 0,
+      thumbnail:     thumbnail    || null,
+      fontUrl:       fontCdnUrl,
+      downloads:     0,
+      publishedAt:   Date.now(),
       storageMethod: 'github',
+      deleteKeyHash: deleteKeyHash || null,  // SHA-256 hash — used to verify delete requests
     };
 
     // Remove old entry with same ID (re-publish scenario), add new one at top

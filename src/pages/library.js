@@ -1,7 +1,7 @@
 // ── library.js — Vibrant Zero-Database Community Font Library ─────────────────────
-import { createNav }                             from '../components/Nav.js';
-import { getCommunityFonts, incrementDownload }  from '../lib/glyphStore.js';
-import { showToast }                             from '../components/Toast.js';
+import { createNav }                                          from '../components/Nav.js';
+import { getCommunityFonts, incrementDownload, deleteFont }   from '../lib/glyphStore.js';
+import { showToast }                                          from '../components/Toast.js';
 
 export function renderLibrary(container, navigate) {
   const page = document.createElement('div');
@@ -323,6 +323,9 @@ function createFontCard(font, index, navigate) {
           <button class="btn btn--sm btn--cute-pink dl-btn" data-id="${font.id}" style="font-family:var(--font-doodle);font-weight:800;">
             Download
           </button>
+          <button class="btn btn--sm del-btn" data-id="${font.id}" title="Delete this font" style="font-family:var(--font-doodle);font-weight:700;background:#fff;border:2px solid #dc2626;color:#dc2626;" >
+            🗑️
+          </button>
         </div>
       </div>
     </div>
@@ -373,6 +376,12 @@ function createFontCard(font, index, navigate) {
     }
   });
 
+  // ── Delete button ────────────────────────────────────────────────
+  card.querySelector('.del-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    showDeleteModal(font, card);
+  });
+
   return card;
 }
 
@@ -382,4 +391,101 @@ function timeAgo(ts) {
   if (days === 0) return 'today';
   if (days === 1) return 'yesterday';
   return `${days}d ago`;
+}
+
+// ── Delete Font Modal ─────────────────────────────────────────────────────────
+function showDeleteModal(font, cardElement) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;';
+
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:460px;width:95%;padding:var(--space-6);">
+      <div style="text-align:center;margin-bottom:var(--space-4);">
+        <div style="font-size:2.5rem;margin-bottom:var(--space-2);">🗑️</div>
+        <h2 style="font-family:var(--font-display);font-size:1.6rem;color:#dc2626;">Delete Font</h2>
+        <p style="font-family:var(--font-doodle);font-size:0.9rem;color:var(--gray-500);margin-top:4px;">
+          Delete <strong>"${font.name}"</strong> by ${font.author || 'Anonymous'}?<br>
+          This removes it from GitHub and the library <strong>permanently</strong>.
+        </p>
+      </div>
+
+      <div style="background:#fef2f2;border:2px solid #dc2626;border-radius:8px;padding:var(--space-4);margin-bottom:var(--space-4);">
+        <label style="display:block;font-family:var(--font-doodle);font-weight:800;font-size:0.9rem;color:#7f1d1d;margin-bottom:var(--space-2);">
+          🔑 Enter your Delete Key:
+        </label>
+        <input
+          id="delete-key-input"
+          class="input"
+          type="text"
+          placeholder="Paste your secret delete key here…"
+          style="width:100%;font-family:monospace;font-size:0.82rem;letter-spacing:0.02em;"
+        />
+        <p style="font-family:var(--font-doodle);font-size:0.78rem;color:#9f1239;margin-top:var(--space-2);line-height:1.4;">
+          This was shown to you when you first published this font. Only the original creator can delete it.
+        </p>
+      </div>
+
+      <div id="del-status" style="display:none;font-family:var(--font-doodle);font-size:0.88rem;margin-bottom:var(--space-3);padding:8px 12px;border-radius:4px;background:var(--cream);"></div>
+
+      <div style="display:flex;gap:var(--space-3);">
+        <button class="btn" id="del-cancel" style="font-family:var(--font-doodle);flex:1;font-weight:700;">
+          Cancel
+        </button>
+        <button class="btn" id="del-confirm" style="font-family:var(--font-doodle);flex:1;font-weight:800;background:#dc2626;color:#fff;border-color:#dc2626;">
+          Yes, Delete Forever
+        </button>
+      </div>
+    </div>
+  `;
+
+  const close = () => overlay.remove();
+  overlay.querySelector('#del-cancel').addEventListener('click', close);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+  overlay.querySelector('#del-confirm').addEventListener('click', async () => {
+    const keyInput  = overlay.querySelector('#delete-key-input');
+    const statusEl  = overlay.querySelector('#del-status');
+    const confirmBtn = overlay.querySelector('#del-confirm');
+    const cancelBtn  = overlay.querySelector('#del-cancel');
+    const deleteKey  = keyInput.value.trim();
+
+    if (!deleteKey) {
+      keyInput.focus();
+      keyInput.style.borderColor = '#dc2626';
+      return;
+    }
+
+    confirmBtn.textContent = '⏳ Deleting…';
+    confirmBtn.disabled    = true;
+    cancelBtn.disabled     = true;
+    statusEl.style.display = 'block';
+    statusEl.style.color   = 'var(--gray-500)';
+    statusEl.textContent   = 'Contacting GitHub… this takes a few seconds.';
+
+    try {
+      await deleteFont(font.id, deleteKey);
+
+      statusEl.style.color   = '#16a34a';
+      statusEl.textContent   = `✅ "${font.name}" deleted from GitHub and the library!`;
+
+      // Animate card out and remove from DOM
+      cardElement.style.transition = 'opacity 0.4s, transform 0.4s';
+      cardElement.style.opacity    = '0';
+      cardElement.style.transform  = 'scale(0.85)';
+      setTimeout(() => { cardElement.remove(); close(); }, 500);
+
+      showToast(`🗑️ "${font.name}" permanently deleted.`);
+
+    } catch (err) {
+      console.error('[delete-font]', err);
+      statusEl.style.color   = '#dc2626';
+      statusEl.textContent   = err.message;
+      confirmBtn.textContent = 'Yes, Delete Forever';
+      confirmBtn.disabled    = false;
+      cancelBtn.disabled     = false;
+    }
+  });
+
+  document.body.appendChild(overlay);
 }

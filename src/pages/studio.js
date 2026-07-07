@@ -1231,9 +1231,11 @@ function showDirectPublishModal(project, container, navigate) {
     const description = overlay.querySelector('#pub-desc').value.trim();
     const confirmBtn  = overlay.querySelector('#pub-confirm');
     const statusEl    = overlay.querySelector('#pub-status');
+    const modal       = overlay.querySelector('.modal');
 
-    const setStatus = (msg) => {
+    const setStatus = (msg, color = 'var(--gray-500)') => {
       statusEl.style.display = 'block';
+      statusEl.style.color   = color;
       statusEl.textContent   = msg;
     };
 
@@ -1249,16 +1251,51 @@ function showDirectPublishModal(project, container, navigate) {
       if (!fontData) throw new Error('Could not build font file. Make sure you have drawn some characters.');
 
       setStatus('Step 2/2 — Uploading to GitHub (this takes ~10 seconds)…');
-      await publishFont(project, fontData, { author, description });
+      const { entry, deleteKey } = await publishFont(project, fontData, { author, description });
 
-      setStatus('✅ Font published! It is now live for everyone worldwide.');
-      confirmBtn.textContent = '✅ Published!';
-      showToast(`🎉 "${project.name}" is now live in the Community Library!`);
+      // ── Show delete key prominently — user MUST save this ─────────
+      modal.innerHTML = `
+        <div style="text-align:center;margin-bottom:var(--space-4);">
+          <div style="font-size:3rem;margin-bottom:var(--space-2);">🎉</div>
+          <h2 style="font-family:var(--font-display);font-size:1.8rem;color:#16a34a;">Font is Live!</h2>
+          <p style="font-family:var(--font-doodle);font-size:0.9rem;color:var(--gray-500);margin-top:4px;">
+            <strong>"${entry.name}"</strong> is now visible to everyone worldwide.
+          </p>
+        </div>
 
-      setTimeout(() => {
+        <div style="background:#fef9c3;border:2px solid #ca8a04;border-radius:8px;padding:var(--space-4);margin-bottom:var(--space-4);">
+          <div style="font-family:var(--font-doodle);font-weight:800;font-size:0.95rem;color:#92400e;margin-bottom:var(--space-2);">
+            🔑 Your Secret Delete Key — Save this now!
+          </div>
+          <div style="font-family:monospace;font-size:0.78rem;background:#fff;border:1.5px solid #ca8a04;border-radius:4px;padding:10px;word-break:break-all;color:#1c1917;margin-bottom:var(--space-2);" id="delete-key-display">
+            ${deleteKey}
+          </div>
+          <button class="btn btn--sm" id="copy-key-btn" style="font-family:var(--font-doodle);font-weight:700;width:100%;background:#ca8a04;color:#fff;border:none;">
+            📋 Copy Delete Key
+          </button>
+          <p style="font-family:var(--font-doodle);font-size:0.8rem;color:#92400e;margin-top:var(--space-2);line-height:1.4;">
+            ⚠️ This key is shown <strong>only once</strong>. If you lose it, you cannot delete this font later. Store it safely!
+          </p>
+        </div>
+
+        <button class="btn btn--cute-pink" id="pub-goto-library" style="font-family:var(--font-doodle);width:100%;font-weight:800;font-size:1.1rem;padding:12px;">
+          ✅ Got it! Go to Library
+        </button>
+      `;
+
+      modal.querySelector('#copy-key-btn').addEventListener('click', () => {
+        navigator.clipboard.writeText(deleteKey).then(() => {
+          modal.querySelector('#copy-key-btn').textContent = '✅ Copied!';
+          setTimeout(() => { modal.querySelector('#copy-key-btn').textContent = '📋 Copy Delete Key'; }, 2000);
+        });
+      });
+
+      modal.querySelector('#pub-goto-library').addEventListener('click', () => {
         close();
         if (navigate) navigate('library');
-      }, 1800);
+      });
+
+      showToast(`🎉 "${entry.name}" is now live in the Community Library!`);
 
     } catch (err) {
       console.error('[publish]', err);
